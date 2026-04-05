@@ -1,0 +1,10 @@
+
+node_modules/
+target/
+.DS_Store
+.expo/
+dist/
+app/node_modules/
+app/.expo/
+app/dist/
+**/*.log
