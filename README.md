@@ -1,114 +1,172 @@
-# SolStice
+# 🌞 SolStice
 
-Autonomous AI trading agent on Solana. Analyzes real-time SOL prices, 
-makes BUY/SELL/HOLD decisions via LLM, and executes them on-chain 
-through an Anchor smart contract.
+**Autonomous AI trading agent on Solana**
+Analyzes real-time SOL prices, makes BUY / SELL / HOLD decisions via LLM, and executes them on-chain through an Anchor smart contract.
 
-## Overview
+---
 
-Solstice is a prototype decentralized application built on **Solana** that allows users to:
+## 🚀 Overview
 
-- Connect their wallet (Phantom)
-- Deposit SOL into a program-controlled vault
-- Choose an investment strategy
-- Monitor on-chain balances and vault state
-- Track real-time SOL price (via CoinGecko)
+SolStice is a decentralized application built on **Solana** that enables:
 
-The protocol is designed to evolve into an AI-powered trading agent that optimizes yield based on market conditions.
+* 🔗 Wallet connection via Phantom
+* 💰 Depositing SOL into a program-controlled vault
+* 🧠 Selecting an investment strategy
+* 📊 Monitoring on-chain balances and vault state
+* 📈 Tracking real-time SOL price via CoinGecko
 
-## Checkpoint status
-- Anchor smart contract deployed on Devnet
-- Current Program ID: `9ad7ocUQqvMkee4URwVMvaLSxuEPiofb2UjR1hv4EgyN`
-- Expo frontend integrated into the repository
-- Frontend reads live Devnet data and SOL/USD from CoinGecko
-- Phantom wallet flow is available on web
-- Deposit / withdraw transaction wiring is included in the frontend service layer
+The long-term vision is to evolve SolStice into a fully autonomous **AI-driven trading agent** that dynamically optimizes user yield based on market conditions.
 
-## Repository structure
-- `programs/solstice` — Anchor smart contract
-- `sdk/` — shared TypeScript SDK helpers and PDA utilities
-- `app/` — Expo / React Native frontend
-- `tests/` — Anchor tests
+---
 
-## Smart contract instructions
-- `initialize_program`
-- `init_vault`
-- `init_user`
-- `deposit`
-- `withdraw`
-- `set_strategy`
+## 📍 Checkpoint Status
 
-## Tech Stack
+* ✅ Anchor smart contract deployed on **Devnet**
+* 🆔 **Program ID:**
+  `9ad7ocUQqvMkee4URwVMvaLSxuEPiofb2UjR1hv4EgyN`
+* 📱 Expo frontend integrated
+* 🌐 Frontend reads live on-chain data
+* 💲 SOL/USD price fetched via CoinGecko
+* 👻 Phantom wallet connection available (web)
+* 🔄 Deposit / Withdraw logic wired in frontend
 
-| Layer | Tech |
-|-------|------|
-| Smart Contract | Rust, Anchor, Solana Devnet |
-| AI Agent | Python, Claude API |
-| Frontend | React, Phantom Wallet, Tailwind CSS |
-| Data | CoinGecko API / Pyth Network |
+---
 
-## Project Structure
+## 🏗 Repository Structure
+
 ```
 solstice/
 │
-├── programs/ # Anchor smart contract
-├── sdk/ # TypeScript SDK (on-chain interaction)
-├── app/ # React Native (Expo) frontend
-│ └── app/
-│ ├── services/
-│ ├── providers/
-│ ├── lib/
-│ └── types/
+├── programs/solstice   # Anchor smart contract
+├── sdk/                # TypeScript SDK (PDA + helpers)
+├── app/                # Expo / React Native frontend
+│   └── app/
+│       ├── services/
+│       ├── providers/
+│       ├── lib/
+│       └── types/
 │
+├── tests/              # Anchor tests
 ├── Anchor.toml
 └── README.md
 ```
-## Getting Started
+
+---
+
+## ⚙️ Smart Contract Instructions
+
+* `initialize_program`
+* `init_vault`
+* `init_user`
+* `deposit`
+* `withdraw`
+* `set_strategy`
+
+---
+
+## 🧠 Tech Stack
+
+| Layer          | Tech                         |
+| -------------- | ---------------------------- |
+| Smart Contract | Rust, Anchor, Solana Devnet  |
+| AI Agent       | Python, Claude API           |
+| Frontend       | React / Expo, Phantom Wallet |
+| Data           | CoinGecko API / Pyth Network |
+| SDK            | TypeScript                   |
+
+---
+
+## ▶️ Getting Started
 
 ### Prerequisites
-- Rust + Anchor
-- Node.js 18+
-- Phantom Wallet (set to Devnet)
+
+* Rust + Anchor
+* Node.js 18+
+* Phantom Wallet (Devnet mode)
+
+---
 
 ### Installation
-1. Install dependencies
 
-bash
+```bash
 cd app
 npm install --legacy-peer-deps
+```
 
-2. Run frontend
+---
+
+### Run Frontend
+
+```bash
 npx expo start
+```
 
-3. Build program (optional)
+---
+
+### Build Program (optional)
+
+```bash
 anchor build
+```
 
-4. Deploy (already deployed)
+---
+
+### Deploy (already deployed)
+
+```bash
 anchor deploy
+```
 
-## ⚙️ Tech Stack
+---
 
-- **Solana / Anchor** — smart contract
-- **TypeScript SDK** — on-chain interaction layer
-- **React Native (Expo)** — frontend mobile dApp
-- **Phantom Wallet** — user authentication
-- **CoinGecko API** — price data
+## 📊 Current Status
 
-## Our team
+| Feature                   | Status         |
+| ------------------------- | -------------- |
+| Smart contract deployment | ✅ Done         |
+| Wallet connection         | ✅ Working      |
+| On-chain state reading    | ✅ Working      |
+| Frontend integration      | ✅ Working      |
+| Deposit                   | ⚠️ In progress |
+| Withdraw                  | ⚠️ In progress |
+| AI execution layer        | ⚠️ Prototype   |
 
-| Name | Role |
-|------|------|
-| Nurali | Solana / Smart Contract |
-| Amir | AI / ML Agent |
-| Kuanysh | Frontend / React |
+---
 
-## Current status
-- Solana program deployed on Devnet
-- Wallet connection implemented
-- Program/account state reading works
-- Frontend integrated with deployed contract
-- Deposit/withdraw transaction flow is currently under active refinement
+## 👥 Team
 
-## License
+| Name    | Role                     |
+| ------- | ------------------------ |
+| Nurali  | Solana / Smart Contracts |
+| Amir    | AI / ML Agent            |
+| Kuanysh | Frontend / React         |
+
+---
+
+## 💡 Vision
+
+SolStice aims to become an autonomous DeFi agent that:
+
+* Reacts to market conditions in real time
+* Uses AI to select optimal strategies
+* Executes trades directly on-chain
+* Minimizes manual user interaction
+
+---
+
+## ⚠️ Notes
+
+This project is a **hackathon checkpoint submission**.
+Core architecture is implemented, while transaction execution (deposit/withdraw) is under active refinement.
+
+---
+
+## 📜 License
 
 MIT
+
+---
+
+## 🔥 Built on Solana
+
+Fast. Scalable. Autonomous.
