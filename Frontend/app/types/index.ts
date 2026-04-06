@@ -26,6 +26,8 @@ export type Decision = {
   action: DecisionAction;
   explanation: string;
   price: number;
+  confidence: number;
+  txId: string;
 };
 
 export type Settings = {
@@ -41,6 +43,7 @@ export type DashboardSnapshot = {
   agentStatus: AgentStatus;
   vaultBalance: number;
   history: number[];
+  latestDecision: Decision | null;
 };
 
 export type NewsItem = {

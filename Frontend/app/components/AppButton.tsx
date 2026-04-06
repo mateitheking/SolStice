@@ -17,27 +17,37 @@ export function AppButton({
   disabled = false,
   variant = 'primary',
 }: AppButtonProps) {
-  const variantClass =
+  const bgStyle =
     variant === 'primary'
-      ? 'bg-[#111111] border-[#111111]'
+      ? { backgroundColor: '#2563EB', borderColor: '#1D4ED8', borderWidth: 1 }
       : variant === 'danger'
-        ? 'bg-[#E5E5E5] border-[#A1A1AA]'
-        : 'bg-transparent border-[#7C7C7C]';
+        ? { backgroundColor: '#450A0A', borderColor: '#7F1D1D', borderWidth: 1 }
+        : { backgroundColor: '#0F172A', borderColor: '#334155', borderWidth: 1 };
 
-  const textClass =
-    variant === 'primary' ? 'text-white' : 'text-zinc-900';
+  const textColor =
+    variant === 'primary' ? '#FFFFFF' : variant === 'danger' ? '#FCA5A5' : '#CBD5E1';
 
   return (
     <Pressable
-      className={`border px-4 py-3 rounded-none ${variantClass} ${disabled ? 'opacity-50' : 'opacity-100'}`}
       onPress={onPress}
       disabled={disabled || loading}
-      style={({ pressed }) => [{ transform: [{ scale: pressed ? 0.985 : 1 }] }]}
+      style={({ pressed }) => [
+        {
+          borderRadius: 14,
+          paddingVertical: 13,
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: disabled ? 0.4 : pressed ? 0.82 : 1,
+          transform: [{ scale: pressed ? 0.977 : 1 }],
+          ...bgStyle,
+        },
+      ]}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'primary' ? '#FFFFFF' : '#111827'} />
+        <ActivityIndicator color={variant === 'primary' ? '#FFFFFF' : '#CBD5E1'} />
       ) : (
-        <Text className={`text-center font-semibold text-base ${textClass}`}>{label}</Text>
+        <Text style={{ color: textColor, fontWeight: '700', fontSize: 15 }}>{label}</Text>
       )}
     </Pressable>
   );

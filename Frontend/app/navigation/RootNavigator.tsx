@@ -4,17 +4,13 @@ import { MainTabs } from './MainTabs';
 import { useAppContext } from '../providers/AppProvider';
 
 export function RootNavigator() {
-  const {
-    user,
-    appReady,
-    settings: { theme },
-  } = useAppContext();
+  const { user, appReady } = useAppContext();
 
   if (!appReady) {
     return (
-      <View className={`flex-1 items-center justify-center ${theme === 'dark' ? 'bg-zinc-950' : 'bg-slate-100'}`}>
-        <ActivityIndicator size="large" color="#10B981" />
-        <Text className={`mt-3 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>Preparing app...</Text>
+      <View className="flex-1 items-center justify-center bg-[#070B14]">
+        <ActivityIndicator size="large" color="#67E8F9" />
+        <Text className="mt-3 text-slate-300">Preparing app...</Text>
       </View>
     );
   }

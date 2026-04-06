@@ -1,73 +1,208 @@
-import { DashboardSnapshot, Decision } from '../types';
+import { DashboardSnapshot, Decision, DecisionAction } from '../types';
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const decisionsMock: Decision[] = [
+// --- Price fetching ---
+const fetchSolPriceFromAPI = async (): Promise<number> => {
+  const timeout = new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
+  const request = fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd').then((res) =>
+    res.json()
+  );
+  const data = await Promise.race([request, timeout]);
+  return Number(data.solana.usd);
+};
+
+const fetchSolPrice = async (): Promise<number> => {
+  try {
+    return await fetchSolPriceFromAPI();
+  } catch {
+    // Fallback: drift from last known price to stay realistic
+    const base = lastPrice ?? 155;
+    const drift = (Math.random() - 0.5) * 1.5;
+    return Number((base + drift).toFixed(2));
+  }
+};
+
+// --- Mock transaction id ---
+const randomTxId = () => {
+  const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  return Array.from({ length: 88 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+};
+
+// --- AI decision generator ---
+const REASONS: Record<DecisionAction, string[]> = {
+  BUY: [
+    'Momentum breakout confirmed above key resistance. Position opened with conservative risk.',
+    'RSI oversold with bullish divergence on 4H chart. Strong accumulation signal detected.',
+    'Volume surge confirms uptrend continuation. AI entering long position.',
+    'Support level held after retest. Whale accumulation pattern detected on-chain.',
+    'MACD crossover on 1H with rising volume. Favorable risk/reward for entry.',
+    'Fear & Greed index at extreme fear with improving on-chain metrics. Contrarian buy.',
+  ],
+  SELL: [
+    'Take-profit triggered after RSI divergence on short timeframe. Position closed.',
+    'Price rejected at major resistance with bearish engulfing candle. Exit executed.',
+    'Profit target reached. Reducing exposure ahead of potential pullback.',
+    'Negative funding rates and declining buy volume. Defensive exit triggered.',
+    'Overbought RSI (>78) with declining volume. Locking in gains.',
+    'Smart money selling detected on-chain. Position closed to manage risk.',
+  ],
+  HOLD: [
+    'Market entered range-bound phase. AI paused until volatility normalizes.',
+    'Mixed signals across timeframes. Waiting for directional confirmation.',
+    'Low-conviction setup. No edge detected — preserving capital.',
+    'Consolidation phase near key level. Monitoring for breakout signals.',
+    'Risk parameters unchanged. Current market structure does not favor new positions.',
+    'Price action indecisive. Agent holding and reassessing next cycle.',
+  ],
+};
+
+let idCounter = 10;
+
+const generateDecision = (price: number, prevPrice: number | null): Decision => {
+  let action: DecisionAction;
+  let confidence: number;
+
+  if (prevPrice === null) {
+    action = 'HOLD';
+    confidence = 52 + Math.floor(Math.random() * 18);
+  } else {
+    const changePct = ((price - prevPrice) / prevPrice) * 100;
+    if (changePct > 0.4) {
+      action = Math.random() > 0.25 ? 'BUY' : 'HOLD';
+      confidence = 62 + Math.floor(Math.random() * 28);
+    } else if (changePct < -0.4) {
+      action = Math.random() > 0.25 ? 'SELL' : 'HOLD';
+      confidence = 60 + Math.floor(Math.random() * 30);
+    } else if (changePct > 0.15) {
+      action = Math.random() > 0.5 ? 'BUY' : 'HOLD';
+      confidence = 50 + Math.floor(Math.random() * 22);
+    } else if (changePct < -0.15) {
+      action = Math.random() > 0.5 ? 'SELL' : 'HOLD';
+      confidence = 50 + Math.floor(Math.random() * 22);
+    } else {
+      action = 'HOLD';
+      confidence = 45 + Math.floor(Math.random() * 20);
+    }
+  }
+
+  const reasons = REASONS[action];
+  const explanation = reasons[Math.floor(Math.random() * reasons.length)];
+
+  return {
+    id: String(++idCounter),
+    timestamp: new Date().toISOString(),
+    action,
+    explanation,
+    price,
+    confidence,
+    txId: randomTxId(),
+  };
+};
+
+// --- Module-level live state ---
+let liveDecisions: Decision[] = [
   {
     id: '1',
-    timestamp: '2026-03-31T09:10:00Z',
+    timestamp: '2026-04-04T04:10:00Z',
     action: 'BUY',
-    explanation: 'Momentum breakout confirmed. Position opened with conservative risk.',
-    price: 179.2,
+    explanation: 'Momentum breakout confirmed above key resistance. Position opened with conservative risk.',
+    price: 152.4,
+    confidence: 81,
+    txId: randomTxId(),
   },
   {
     id: '2',
-    timestamp: '2026-03-31T11:20:00Z',
+    timestamp: '2026-04-04T04:40:00Z',
     action: 'HOLD',
-    explanation: 'Market entered range. AI paused until volatility normalizes.',
-    price: 180.3,
+    explanation: 'Market entered range-bound phase. AI paused until volatility normalizes.',
+    price: 153.1,
+    confidence: 58,
+    txId: randomTxId(),
   },
   {
     id: '3',
-    timestamp: '2026-03-31T14:45:00Z',
+    timestamp: '2026-04-04T05:10:00Z',
     action: 'SELL',
-    explanation: 'Take-profit triggered after RSI divergence on short timeframe.',
-    price: 184.1,
+    explanation: 'Overbought RSI (>78) with declining volume. Locking in gains.',
+    price: 156.8,
+    confidence: 74,
+    txId: randomTxId(),
   },
   {
     id: '4',
-    timestamp: '2026-03-31T16:10:00Z',
+    timestamp: '2026-04-04T05:40:00Z',
     action: 'BUY',
-    explanation: 'Re-entry after support retest and buy volume recovery.',
-    price: 182.8,
+    explanation: 'Support level held after retest. Whale accumulation pattern detected on-chain.',
+    price: 154.3,
+    confidence: 77,
+    txId: randomTxId(),
   },
   {
     id: '5',
-    timestamp: '2026-03-31T18:35:00Z',
+    timestamp: '2026-04-04T06:10:00Z',
     action: 'HOLD',
-    explanation: 'No edge currently. Agent keeps portfolio unchanged.',
-    price: 183.4,
+    explanation: 'Mixed signals across timeframes. Waiting for directional confirmation.',
+    price: 155.9,
+    confidence: 52,
+    txId: randomTxId(),
+  },
+  {
+    id: '6',
+    timestamp: '2026-04-04T06:40:00Z',
+    action: 'BUY',
+    explanation: 'MACD crossover on 1H with rising volume. Favorable risk/reward for entry.',
+    price: 157.2,
+    confidence: 83,
+    txId: randomTxId(),
+  },
+  {
+    id: '7',
+    timestamp: '2026-04-04T07:10:00Z',
+    action: 'SELL',
+    explanation: 'Smart money selling detected on-chain. Position closed to manage risk.',
+    price: 159.6,
+    confidence: 69,
+    txId: randomTxId(),
   },
 ];
 
+let priceHistory: number[] = [152.4, 153.1, 156.8, 154.3, 155.9, 157.2, 159.6];
+let lastPrice: number | null = 159.6;
 let vaultBalance = 12.45;
 
-const generateHistory = () =>
-  Array.from({ length: 12 }, (_, index) => {
-    const base = 174 + index * 1.2;
-    const noise = Math.random() * 3;
-    return Number((base + noise).toFixed(2));
-  });
-
 export const decisionService = {
-  async fetchDecisions() {
-    await wait(500);
-    return decisionsMock;
+  async fetchDecisions(): Promise<Decision[]> {
+    await wait(150);
+    return [...liveDecisions];
   },
 
   async fetchDashboardSnapshot(): Promise<DashboardSnapshot> {
-    await wait(550);
+    const solPrice = await fetchSolPrice();
 
-    const solPrice = Number((182 + Math.random() * 5).toFixed(2));
-    const profitLoss = Number(((Math.random() - 0.2) * 12).toFixed(2));
+    const newDecision = generateDecision(solPrice, lastPrice);
+    liveDecisions = [...liveDecisions, newDecision];
+
+    priceHistory = [...priceHistory.slice(-11), solPrice];
+    lastPrice = solPrice;
+
+    const profitLoss = Number(
+      liveDecisions
+        .slice(-10)
+        .reduce((acc, d) => acc + (d.action === 'BUY' ? 1 : d.action === 'SELL' ? -0.5 : 0), 0)
+        .toFixed(2)
+    );
+
+    const agentStatus = newDecision.action !== 'HOLD' ? 'Active' : 'Idle';
 
     return {
       solPrice,
       profitLoss,
-      tradesCount: decisionsMock.length,
-      agentStatus: Math.random() > 0.2 ? 'Active' : 'Idle',
+      tradesCount: liveDecisions.filter((d) => d.action !== 'HOLD').length,
+      agentStatus,
       vaultBalance,
-      history: generateHistory(),
+      history: priceHistory,
+      latestDecision: newDecision,
     };
   },
 

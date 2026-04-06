@@ -1,12 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { AppButton } from '../../components/AppButton';
 import { AppScreen } from '../../components/AppScreen';
 import { GlassCard } from '../../components/GlassCard';
 import { InputField } from '../../components/InputField';
 import { MotionView } from '../../components/MotionView';
-import { ScreenHeader } from '../../components/ScreenHeader';
 import { AuthStackParamList } from '../../navigation/AuthStack';
 import { useAppContext } from '../../providers/AppProvider';
 import { useToast } from '../../providers/ToastProvider';
@@ -37,28 +36,58 @@ export function LoginScreen({ navigation }: Props) {
 
   return (
     <AppScreen>
-      <View className="flex-1 justify-center">
-        <MotionView delay={50}>
-          <ScreenHeader
-            eyebrow="access"
-            title="AI Trading Control"
-            subtitle="Авторизация для доступа к стратегии, журналу решений и кошельку."
-          />
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+
+        {/* Brand header */}
+        <MotionView delay={30}>
+          <View style={{ alignItems: 'center', marginBottom: 40 }}>
+            <View style={{
+              width: 64, height: 64, borderRadius: 18,
+              backgroundColor: '#1E3A8A',
+              alignItems: 'center', justifyContent: 'center',
+              marginBottom: 16,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.15,
+              shadowRadius: 12,
+              elevation: 8,
+            }}>
+              <View style={{ width: 28, height: 28, borderRadius: 4, overflow: 'hidden', flexDirection: 'row' }}>
+                <View style={{ flex: 1, backgroundColor: '#8BF4D5' }} />
+                <View style={{ flex: 1, backgroundColor: '#1E3A8A' }} />
+              </View>
+            </View>
+            <Text style={{ fontSize: 26, fontWeight: '800', color: '#F8FAFC', letterSpacing: -0.5 }}>
+              web3tech
+            </Text>
+            <Text style={{ fontSize: 13, color: '#94A3B8', marginTop: 4 }}>
+              AI-powered SOL trading agent
+            </Text>
+          </View>
         </MotionView>
 
-        <MotionView delay={140}>
+        <MotionView delay={120}>
           <GlassCard>
+            <Text style={{ fontSize: 18, fontWeight: '700', color: '#F8FAFC', marginBottom: 16 }}>
+              Sign in
+            </Text>
             <InputField label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" />
             <InputField label="Password" value={password} onChangeText={setPassword} secureTextEntry />
 
-            <View className="gap-3 mt-2">
-              <AppButton label="Login" onPress={handleLogin} loading={authLoading} />
-              <AppButton label="Register" onPress={() => navigation.navigate('Register')} variant="secondary" />
+            <View style={{ gap: 10, marginTop: 8 }}>
+              <AppButton label="Sign In" onPress={handleLogin} loading={authLoading} />
+              <AppButton label="Create Account" onPress={() => navigation.navigate('Register')} variant="secondary" />
               <AppButton label="Continue as Guest" onPress={handleGuest} variant="secondary" />
             </View>
 
-            {authLoading ? <ActivityIndicator color="#0F172A" className="mt-4" /> : null}
+            {authLoading ? <ActivityIndicator color="#10B981" style={{ marginTop: 12 }} /> : null}
           </GlassCard>
+        </MotionView>
+
+        <MotionView delay={220}>
+          <Text style={{ textAlign: 'center', fontSize: 11, color: '#D1D5DB', marginTop: 20 }}>
+            Demo: demo@trading.app / demo123
+          </Text>
         </MotionView>
       </View>
     </AppScreen>

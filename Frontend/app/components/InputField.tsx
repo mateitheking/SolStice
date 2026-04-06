@@ -1,5 +1,4 @@
 import { Text, TextInput, View } from 'react-native';
-import { useAppContext } from '../providers/AppProvider';
 
 type InputFieldProps = {
   label: string;
@@ -16,25 +15,17 @@ export function InputField({
   secureTextEntry = false,
   autoCapitalize = 'none',
 }: InputFieldProps) {
-  const {
-    settings: { theme },
-  } = useAppContext();
-
   return (
     <View className="mb-3">
-      <Text className={`mb-2 text-sm font-medium ${theme === 'dark' ? 'text-zinc-200' : 'text-zinc-700'}`}>{label}</Text>
+      <Text className="mb-2 text-sm font-medium text-slate-300">{label}</Text>
       <TextInput
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
         autoCapitalize={autoCapitalize}
         placeholder={label}
-        placeholderTextColor={theme === 'dark' ? '#A1A1AA' : '#71717A'}
-        className={`border px-4 py-3 rounded-none ${
-          theme === 'dark'
-            ? 'bg-[#18181B] border-[#3F3F46] text-white'
-            : 'bg-[#EFEFEF] border-[#A3A3A3] text-zinc-900'
-        }`}
+        placeholderTextColor="#64748B"
+        className="border px-4 py-3 rounded-xl bg-[#0F172A] border-[#334155] text-white"
       />
     </View>
   );

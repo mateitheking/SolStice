@@ -5,6 +5,6 @@ export function useDashboard() {
   return useQuery({
     queryKey: ['dashboard'],
     queryFn: decisionService.fetchDashboardSnapshot,
-    refetchInterval: 15_000,
+    refetchInterval: 30_000,
   });
 }

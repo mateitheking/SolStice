@@ -54,10 +54,11 @@ Every trade decision includes a **reasoning hash** - a SHA-256 fingerprint of th
 │   ├── tests/solstice.ts
 │   └── Anchor.toml
 │
-└── Frontend/               # Mobile app (React Native + Expo)
-    ├── app/screens/
-    ├── app/services/
-    └── app/components/
+└── Frontend/               # Mobile app + web (React Native + Expo)
+    ├── app/screens/        # Dashboard, Wallet, AI Log, Strategy, News
+    ├── app/components/     # UI components incl. TrendChart, WhatWeDoSection
+    ├── app/services/       # Solana wallet and decision services
+    └── dist/               # Web build (deployable to Vercel/Netlify)
 ```
 
 ---
@@ -164,12 +165,26 @@ ollama create solstice-trader -f Modelfile
 
 ## Frontend
 
-React Native app built with Expo. Screens: Dashboard, AI Decision Log, Wallet, Strategy, News.
+React Native + Expo app that runs as both a **mobile app** and a **web app**.
+
+Screens: Dashboard, AI Decision Log, Wallet, Strategy, News.
+
+New in this version: `TrendChart` (smooth SVG price chart) and `WhatWeDoSection` (animated feature breakdown for the web landing page).
+
+### Run locally
 
 ```bash
 cd Frontend
 npm install
-npx expo start
+npx expo start       # mobile (scan QR with Expo Go)
+npx expo start --web # web browser
+```
+
+### Web build
+
+```bash
+npx expo export --platform web
+# output goes to dist/ - deploy to Vercel or Netlify
 ```
 
 ---
@@ -180,7 +195,7 @@ npx expo start
 |---|---|
 | Amir | AI/ML Engineer - Agent, custom model, SDK bridge |
 | Nurali | Blockchain Engineer - Solana smart contract |
-| Kuanysh | Frontend Engineer - React Native app |
+| Kuanysh | Frontend Engineer - React Native app and web |
 
 ---
 
