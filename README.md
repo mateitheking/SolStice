@@ -1,6 +1,6 @@
-# SolStice — Autonomous On-Chain AI Trader
+# SolStice - Autonomous On-Chain AI Trader
 
-SolStice is an autonomous AI trading agent built on Solana. The agent analyzes real-time market data, makes BUY/SELL/HOLD decisions using multiple AI models, and records every decision on-chain via a smart contract — creating a fully verifiable, trustless trading history.
+SolStice is an autonomous AI trading agent built on Solana. The agent analyzes real-time market data, makes BUY/SELL/HOLD decisions using multiple AI models, and records every decision on-chain via a smart contract, creating a fully verifiable trading history.
 
 Built for the **National Solana Hackathon 2026**.
 
@@ -10,23 +10,23 @@ Built for the **National Solana Hackathon 2026**.
 
 ```
 Market Data (CoinGecko, DeFiLlama)
-        ↓
+        |
    AI Agent (Python)
-   ├── Claude (Anthropic)
-   ├── OpenAI GPT
-   ├── SolStice Model (custom fine-tuned)
-   └── Rule-based fallback
-        ↓
+   |- Claude (Anthropic)
+   |- OpenAI GPT
+   |- SolStice Model (custom fine-tuned)
+   |- Rule-based fallback
+        |
   Confidence Score + SHA-256 Reasoning Hash
-        ↓
+        |
    SDK Bridge (Node.js)
-        ↓
+        |
   Solana Smart Contract (Anchor/Rust)
-        ↓
+        |
    On-chain TradeEvent emitted
 ```
 
-Every trade decision includes a **reasoning hash** — a SHA-256 fingerprint of the AI's explanation, price, and action — making the agent's logic verifiable on-chain.
+Every trade decision includes a **reasoning hash** - a SHA-256 fingerprint of the AI's explanation, price, and action - making the agent's logic verifiable on-chain.
 
 ---
 
@@ -38,25 +38,25 @@ Every trade decision includes a **reasoning hash** — a SHA-256 fingerprint of 
 │   ├── gui.html            # Local dashboard UI
 │   ├── requirements.txt
 │   ├── .env.example
-│   ├── sdk-bridge/         # Node.js bridge → Solana contract
+│   ├── sdk-bridge/         # Node.js bridge to Solana contract
 │   │   ├── index.js
 │   │   └── solstice.json   # Program IDL
 │   └── custom-model/       # SolStice fine-tuned model
-│       ├── collect_data.py     # Fetch 90-day SOL market data
-│       ├── generate_training.py # Generate training dataset
-│       ├── train_local.py      # Fine-tune with LoRA (Phi-3.5)
-│       ├── export_gguf.py      # Export to Ollama
-│       └── Modelfile           # Ollama model definition
+│       ├── collect_data.py
+│       ├── generate_training.py
+│       ├── train_local.py
+│       ├── export_gguf.py
+│       └── Modelfile
 │
 ├── Smart-Contract/         # Anchor smart contract (Rust)
 │   ├── programs/solstice/src/lib.rs
-│   ├── sdk/sdk.ts          # TypeScript SDK
+│   ├── sdk/sdk.ts
 │   ├── tests/solstice.ts
 │   └── Anchor.toml
 │
 └── Frontend/               # Mobile app (React Native + Expo)
-    ├── app/screens/        # Dashboard, Wallet, AI Log, Strategy
-    ├── app/services/       # Solana wallet & decision services
+    ├── app/screens/
+    ├── app/services/
     └── app/components/
 ```
 
@@ -81,9 +81,9 @@ Every trade decision includes a **reasoning hash** — a SHA-256 fingerprint of 
 
 ### On-chain Events
 
-- `DepositEvent` — user deposit recorded
-- `TradeEvent` — AI decision: action, amount, price, reason, timestamp
-- `WithdrawEvent` — user withdrawal recorded
+- `DepositEvent` - user deposit recorded
+- `TradeEvent` - AI decision: action, amount, price, reason, timestamp
+- `WithdrawEvent` - user withdrawal recorded
 
 ---
 
@@ -91,10 +91,10 @@ Every trade decision includes a **reasoning hash** — a SHA-256 fingerprint of 
 
 ### Features
 
-- **Multi-model routing** — Claude, OpenAI GPT, custom SolStice model, rule-based
-- **Confidence scoring** — each decision rated 0.0–1.0
-- **Reasoning hash** — SHA-256 of (reason + price + action), stored on-chain
-- **Strategy-aware sizing** — Conservative: 0.1 SOL base / Aggressive: 0.2 SOL
+- **Multi-model routing** - Claude, OpenAI GPT, custom SolStice model, rule-based
+- **Confidence scoring** - each decision rated 0.0 to 1.0
+- **Reasoning hash** - SHA-256 of (reason + price + action), stored on-chain
+- **Strategy-aware sizing** - Conservative: 0.1 SOL base / Aggressive: 0.2 SOL
 - **Live dashboard** at `http://localhost:8000/gui`
 - **REST API** for frontend integration
 
@@ -126,7 +126,7 @@ Open **http://localhost:8000/gui** to see the live dashboard.
 ```env
 ANTHROPIC_API_KEY=sk-ant-...
 OPENAI_API_KEY=sk-proj-...
-DEFAULT_MODEL=claude          # claude | openai | custom | rule
+DEFAULT_MODEL=claude
 INTERVAL_SECONDS=30
 USER_PUBKEY=<your_wallet>
 SDK_BRIDGE_URL=http://localhost:3001
@@ -145,23 +145,18 @@ SDK_BRIDGE_URL=http://localhost:3001
 
 ---
 
-## Custom AI Model (SolStice Model)
+## Custom AI Model
 
-A Solana-specialized language model fine-tuned on 90 days of SOL price history, DeFi TVL data, and network metrics.
+A Solana-specialized model fine-tuned on 90 days of SOL price history, DeFi TVL data, and network metrics.
 
 ```bash
-# Step 1: Collect training data
 cd sol-agent/custom-model
-python collect_data.py
 
-# Step 2: Generate training dataset
-python generate_training.py
+python collect_data.py        # fetch training data
+python generate_training.py   # build dataset
+python train_local.py         # fine-tune with LoRA (requires GPU)
+python export_gguf.py         # export to Ollama format
 
-# Step 3: Fine-tune locally (requires GPU)
-python train_local.py
-
-# Step 4: Export to Ollama
-python export_gguf.py
 ollama create solstice-trader -f Modelfile
 ```
 
@@ -169,7 +164,7 @@ ollama create solstice-trader -f Modelfile
 
 ## Frontend
 
-React Native app (Expo) with screens for Dashboard, AI Decision Log, Wallet, Strategy selection, and News.
+React Native app built with Expo. Screens: Dashboard, AI Decision Log, Wallet, Strategy, News.
 
 ```bash
 cd Frontend
@@ -183,16 +178,16 @@ npx expo start
 
 | Name | Role |
 |---|---|
-| Amir | AI/ML Engineer — Agent, custom model, SDK bridge |
-| Nurali | Blockchain Engineer — Solana smart contract |
-| Kuanysh | Frontend Engineer — React Native app |
+| Amir | AI/ML Engineer - Agent, custom model, SDK bridge |
+| Nurali | Blockchain Engineer - Solana smart contract |
+| Kuanysh | Frontend Engineer - React Native app |
 
 ---
 
 ## Tech Stack
 
 - **Blockchain:** Solana, Anchor Framework, Rust
-- **Agent:** Python, FastAPI, httpx, SQLite
+- **Agent:** Python, FastAPI, SQLite
 - **AI Models:** Anthropic Claude, OpenAI GPT, Ollama (Phi-3.5 LoRA)
 - **Bridge:** Node.js, Express, @coral-xyz/anchor
 - **Frontend:** React Native, Expo, TypeScript, NativeWind
