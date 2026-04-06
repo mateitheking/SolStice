@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolStice AI Agent</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --border: #1e1e2e;
+    --text: #e0e0e0;
+    --muted: #888;
+    --accent: #7c5cfc;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --blue: #3b82f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  .header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(10,10,15,0.85);
+  }
+  .logo {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #7c5cfc, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    display: inline-block;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    display: grid;
+    gap: 20px;
+  }
+
+  .top-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .metric {
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .metric-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  select, input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  select:focus, input:focus {
+    border-color: var(--accent);
+  }
+  select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-outline:hover { border-color: var(--accent); }
+
+  .decisions-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .decisions-table th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .decisions-table td {
+    padding: 12px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .decisions-table tr:hover { background: rgba(124,92,252,0.04); }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-buy { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-sell { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge-hold { background: rgba(234,179,8,0.15); color: var(--yellow); }
+
+  .confidence-bar {
+    width: 60px;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .confidence-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+
+  .hash-text {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .hash-text:hover { color: var(--accent); }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 20px;
+    background: var(--card);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    font-size: 13px;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  .last-decision-card {
+    border-left: 3px solid var(--accent);
+  }
+
+  .auto-refresh {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  @media (max-width: 768px) {
+    .top-grid { grid-template-columns: 1fr; }
+    .controls { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;align-items:center;gap:16px">
+    <span class="logo">SolStice AI</span>
+    <span class="auto-refresh">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="agentStatus">connecting...</span>
+    </span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="auto-refresh">Auto-refresh: 10s</span>
+    <button class="btn btn-outline" onclick="runOnce()">Run Once</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Controls -->
+  <div class="card">
+    <h3>Agent Controls</h3>
+    <div class="controls">
+      <div>
+        <label>AI Model</label>
+        <select id="modelSelect" onchange="setModel(this.value)">
+          <option value="claude">Claude (Anthropic)</option>
+          <option value="openai">OpenAI (GPT)</option>
+          <option value="custom">SolStice Model (Solana-tuned)</option>
+          <option value="rule">Rule-based</option>
+        </select>
+      </div>
+      <div>
+        <label>Strategy</label>
+        <select id="strategySelect" onchange="setStrategy(this.value)">
+          <option value="conservative">Conservative</option>
+          <option value="aggressive">Aggressive</option>
+        </select>
+      </div>
+      <div>
+        <label>User Pubkey</label>
+        <input id="pubkeyInput" placeholder="wallet address..." readonly
+               style="font-size:12px;font-family:monospace">
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" onclick="refreshAll()">Refresh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="top-grid">
+    <div class="card">
+      <h3>SOL / USDC Price</h3>
+      <div class="metric" id="currentPrice">--</div>
+      <div class="metric-sub" id="priceTime">--</div>
+    </div>
+    <div class="card last-decision-card">
+      <h3>Last Decision</h3>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="metric" id="lastAction">--</span>
+        <span id="lastBadge"></span>
+      </div>
+      <div class="metric-sub" id="lastReason">--</div>
+    </div>
+    <div class="card">
+      <h3>Confidence</h3>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="metric" id="lastConfidence">--</span>
+      </div>
+      <div class="metric-sub" id="lastModel">--</div>
+    </div>
+  </div>
+
+  <!-- Decisions Log -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin-bottom:0">Decision History</h3>
+      <span style="font-size:12px;color:var(--muted)" id="decisionCount">0 decisions</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="decisions-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Action</th>
+            <th>Price</th>
+            <th>Confidence</th>
+            <th>Reason</th>
+            <th>Model</th>
+            <th>Hash</th>
+            <th>Tx</th>
+          </tr>
+        </thead>
+        <tbody id="decisionsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = window.location.origin;
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+function badgeClass(action) {
+  return action === 'BUY' ? 'badge-buy' : action === 'SELL' ? 'badge-sell' : 'badge-hold';
+}
+
+function confColor(c) {
+  if (c >= 0.7) return 'var(--green)';
+  if (c >= 0.4) return 'var(--yellow)';
+  return 'var(--red)';
+}
+
+function timeAgo(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  const sec = Math.floor((now - d) / 1000);
+  if (sec < 60) return sec + 's ago';
+  if (sec < 3600) return Math.floor(sec/60) + 'm ago';
+  return d.toLocaleTimeString();
+}
+
+async function fetchStatus() {
+  try {
+    const r = await fetch(API + '/status');
+    const d = await r.json();
+
+    document.getElementById('agentStatus').textContent = d.agent;
+    document.getElementById('statusDot').style.background =
+      d.agent === 'online' ? 'var(--green)' : 'var(--red)';
+
+    document.getElementById('modelSelect').value = d.model;
+    document.getElementById('strategySelect').value = d.strategy;
+    document.getElementById('pubkeyInput').value = d.user_pubkey || 'not set';
+
+    // Disable unavailable models
+    const opts = document.getElementById('modelSelect').options;
+    // We'll update availability from /config
+    fetchConfig();
+
+    if (d.last_price) {
+      document.getElementById('currentPrice').textContent =
+        '$' + parseFloat(d.last_price.sol_usdc).toFixed(2);
+      document.getElementById('priceTime').textContent = timeAgo(d.last_price.ts);
+    }
+
+    if (d.last_decision) {
+      const ld = d.last_decision;
+      document.getElementById('lastAction').textContent = ld.action;
+      document.getElementById('lastBadge').innerHTML =
+        `<span class="badge ${badgeClass(ld.action)}">${ld.action}</span>`;
+      document.getElementById('lastReason').textContent = ld.reason;
+      document.getElementById('lastConfidence').textContent =
+        (parseFloat(ld.confidence) * 100).toFixed(0) + '%';
+      document.getElementById('lastModel').textContent =
+        'via ' + (ld.model || 'rule') + ' | ' + timeAgo(ld.ts);
+    }
+  } catch (e) {
+    document.getElementById('agentStatus').textContent = 'offline';
+    document.getElementById('statusDot').style.background = 'var(--red)';
+  }
+}
+
+async function fetchConfig() {
+  try {
+    const r = await fetch(API + '/config');
+    const d = await r.json();
+    const sel = document.getElementById('modelSelect');
+    for (const opt of sel.options) {
+      const available = d.available_models[opt.value];
+      if (!available && opt.value !== 'rule') {
+        opt.textContent = opt.textContent.replace(' (no key)', '') + ' (no key)';
+        opt.disabled = true;
+      } else {
+        opt.textContent = opt.textContent.replace(' (no key)', '');
+        opt.disabled = false;
+      }
+    }
+  } catch {}
+}
+
+async function fetchDecisions() {
+  try {
+    const r = await fetch(API + '/decisions');
+    const data = await r.json();
+    document.getElementById('decisionCount').textContent = data.length + ' decisions';
+
+    const tbody = document.getElementById('decisionsBody');
+    tbody.innerHTML = data.slice(0, 50).map(d => {
+      const conf = parseFloat(d.confidence || 0);
+      const hash = d.reasoning_hash || '';
+      const tx = d.tx_hash || '';
+      return `<tr>
+        <td style="white-space:nowrap">${timeAgo(d.ts)}</td>
+        <td><span class="badge ${badgeClass(d.action)}">${d.action}</span></td>
+        <td>$${parseFloat(d.price).toFixed(2)}</td>
+        <td>
+          <div class="confidence-bar">
+            <div class="confidence-fill" style="width:${conf*100}%;background:${confColor(conf)}"></div>
+          </div>
+          ${(conf*100).toFixed(0)}%
+        </td>
+        <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+            title="${(d.reason||'').replace(/"/g,'&quot;')}">${d.reason || ''}</td>
+        <td>${d.model || 'rule'}</td>
+        <td><span class="hash-text" title="${hash}" onclick="navigator.clipboard.writeText('${hash}');toast('Hash copied')">${hash.slice(0,8)}...</span></td>
+        <td>${tx ? `<span class="hash-text" title="${tx}" onclick="navigator.clipboard.writeText('${tx}');toast('Tx copied')">${tx.slice(0,8)}...</span>` : '<span style="color:var(--muted)">-</span>'}</td>
+      </tr>`;
+    }).join('');
+  } catch {}
+}
+
+async function setModel(model) {
+  try {
+    const r = await fetch(API + '/set-model', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({model})
+    });
+    const d = await r.json();
+    if (d.error) {
+      toast('Error: ' + d.error);
+    } else {
+      toast('Model: ' + d.model);
+    }
+  } catch (e) { toast('Failed: ' + e.message); }
+}
+
+async function setStrategy(strategy) {
+  try {
+    const r = await fetch(API + '/set-strategy', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({strategy})
+    });
+    const d = await r.json();
+    if (d.error) {
+      toast('Error: ' + d.error);
+    } else {
+      toast('Strategy: ' + d.strategy);
+    }
+  } catch (e) { toast('Failed: ' + e.message); }
+}
+
+async function runOnce() {
+  toast('Running agent cycle...');
+  try {
+    const r = await fetch(API + '/run-once', {method: 'POST'});
+    const d = await r.json();
+    toast(`${d.action} | confidence: ${(d.confidence*100).toFixed(0)}%`);
+    setTimeout(refreshAll, 500);
+  } catch (e) { toast('Error: ' + e.message); }
+}
+
+function refreshAll() {
+  fetchStatus();
+  fetchDecisions();
+}
+
+// Init
+refreshAll();
+setInterval(refreshAll, 10000);
+</script>
+</body>
+</html>

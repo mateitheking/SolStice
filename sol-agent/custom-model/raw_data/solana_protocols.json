@@ -1,0 +1,352 @@
+[
+  {
+    "name": "Binance CEX",
+    "category": "CEX",
+    "tvl": 144624076217.774,
+    "change_1d": -0.4651276599051499,
+    "change_7d": -0.2745405974425239
+  },
+  {
+    "name": "Lido",
+    "category": "Liquid Staking",
+    "tvl": 19004415247.170914,
+    "change_1d": -0.31528468433417345,
+    "change_7d": 3.1118186036187723
+  },
+  {
+    "name": "Bitfinex",
+    "category": "CEX",
+    "tvl": 17137393335.944984,
+    "change_1d": -0.06989342882327776,
+    "change_7d": 3.1159828378495718
+  },
+  {
+    "name": "Bybit",
+    "category": "CEX",
+    "tvl": 14844969079.253538,
+    "change_1d": -0.4329175261127034,
+    "change_7d": -0.7226273406665342
+  },
+  {
+    "name": "OKX",
+    "category": "CEX",
+    "tvl": 12760006335.262882,
+    "change_1d": -4.296172755344358,
+    "change_7d": -0.8413163762230766
+  },
+  {
+    "name": "HTX",
+    "category": "CEX",
+    "tvl": 5108454798.764354,
+    "change_1d": 0.33955380577192784,
+    "change_7d": -1.759771200358557
+  },
+  {
+    "name": "Bitget",
+    "category": "CEX",
+    "tvl": 4834092489.423055,
+    "change_1d": -0.08772503516206598,
+    "change_7d": 0.8185679095347211
+  },
+  {
+    "name": "Gate",
+    "category": "CEX",
+    "tvl": 4739461532.438258,
+    "change_1d": 0.3026034486611735,
+    "change_7d": 2.5593054455330844
+  },
+  {
+    "name": "MEXC",
+    "category": "CEX",
+    "tvl": 4585032463.046073,
+    "change_1d": -0.010856971029397755,
+    "change_7d": 1.0717635674733117
+  },
+  {
+    "name": "Deribit",
+    "category": "CEX",
+    "tvl": 3870777443.373995,
+    "change_1d": -0.602508994304003,
+    "change_7d": -3.034294368039127
+  },
+  {
+    "name": "KuCoin",
+    "category": "CEX",
+    "tvl": 3269009924.439323,
+    "change_1d": -0.8045095062893068,
+    "change_7d": 0.0908734941662317
+  },
+  {
+    "name": "BlackRock BUIDL",
+    "category": "RWA",
+    "tvl": 2833488942.250449,
+    "change_1d": 0,
+    "change_7d": 4.975762373659222
+  },
+  {
+    "name": "Ondo Yield Assets",
+    "category": "RWA",
+    "tvl": 2785186347.7572045,
+    "change_1d": -0.23784072729901595,
+    "change_7d": 25.17546157957591
+  },
+  {
+    "name": "Maple",
+    "category": "Lending",
+    "tvl": 2087734025.0613062,
+    "change_1d": 0.2800727359816477,
+    "change_7d": -16.300060869752542
+  },
+  {
+    "name": "Sentora",
+    "category": "Risk Curators",
+    "tvl": 1839271757.8301015,
+    "change_1d": 0.17693447024402076,
+    "change_7d": 5.838455808206206
+  },
+  {
+    "name": "Kamino Lend",
+    "category": "Lending",
+    "tvl": 1515542780.5926018,
+    "change_1d": -0.3475472915137061,
+    "change_7d": -15.992100021909764
+  },
+  {
+    "name": "Portal",
+    "category": "Bridge",
+    "tvl": 1503225461.5820882,
+    "change_1d": -1.9715279046277203,
+    "change_7d": 0.8615652928664446
+  },
+  {
+    "name": "HashKey Exchange",
+    "category": "CEX",
+    "tvl": 1408426614.0796344,
+    "change_1d": -0.3461788580768115,
+    "change_7d": 1.2375064204444897
+  },
+  {
+    "name": "Gauntlet",
+    "category": "Risk Curators",
+    "tvl": 1274332741.9447503,
+    "change_1d": -0.4356256614837548,
+    "change_7d": 5.4593872968101635
+  },
+  {
+    "name": "Bitkub",
+    "category": "CEX",
+    "tvl": 1227683675.5863602,
+    "change_1d": -0.5759955909781809,
+    "change_7d": -0.3877633717748239
+  },
+  {
+    "name": "Poloniex",
+    "category": "CEX",
+    "tvl": 1173459237.8800545,
+    "change_1d": -0.455594184887417,
+    "change_7d": -6.2636803428970325
+  },
+  {
+    "name": "Bitstamp",
+    "category": "CEX",
+    "tvl": 1110180319.883211,
+    "change_1d": -1.1611152029669682,
+    "change_7d": -1.3624873485795774
+  },
+  {
+    "name": "Bitmex",
+    "category": "CEX",
+    "tvl": 1103171598.6927514,
+    "change_1d": -0.4596931099721644,
+    "change_7d": -0.1639749965769255
+  },
+  {
+    "name": "Sanctum Validator LSTs",
+    "category": "Liquid Staking",
+    "tvl": 1004088528.1933222,
+    "change_1d": -0.8084969377114959,
+    "change_7d": -3.2394159116304593
+  },
+  {
+    "name": "Raydium AMM",
+    "category": "Dexs",
+    "tvl": 956895857.4468703,
+    "change_1d": -0.09789750554168108,
+    "change_7d": -1.7521436139376902
+  },
+  {
+    "name": "Jupiter Lend",
+    "category": "Lending",
+    "tvl": 927910619.5887138,
+    "change_1d": -0.5670717819176474,
+    "change_7d": -6.983944913264622
+  },
+  {
+    "name": "Jito Liquid Staking",
+    "category": "Liquid Staking",
+    "tvl": 886172430.2262608,
+    "change_1d": -1.5891644985358937,
+    "change_7d": -13.81733381488371
+  },
+  {
+    "name": "SwissBorg",
+    "category": "CEX",
+    "tvl": 858040109.6593533,
+    "change_1d": -0.4818342287944404,
+    "change_7d": -0.17562179976660275
+  },
+  {
+    "name": "Superstate USTB",
+    "category": "RWA",
+    "tvl": 840883974.9562082,
+    "change_1d": 0.059525154083758025,
+    "change_7d": 44.461064085010804
+  },
+  {
+    "name": "DoubleZero Staked SOL",
+    "category": "Liquid Staking",
+    "tvl": 814233093.2206634,
+    "change_1d": -0.520550474305054,
+    "change_7d": -3.2523738776009736
+  },
+  {
+    "name": "Binance Staked SOL",
+    "category": "Liquid Staking",
+    "tvl": 758927397.0097868,
+    "change_1d": -0.4939364869528049,
+    "change_7d": -5.129485201629834
+  },
+  {
+    "name": "Ondo Global Markets",
+    "category": "RWA",
+    "tvl": 722209320.0517688,
+    "change_1d": 4.263256414560601e-14,
+    "change_7d": 5.331331742096651
+  },
+  {
+    "name": "Jupiter Staked SOL",
+    "category": "Liquid Staking",
+    "tvl": 716319930.7466621,
+    "change_1d": -0.6259123037287537,
+    "change_7d": -8.767379890567966
+  },
+  {
+    "name": "Jupiter Perpetual Exchange",
+    "category": "Derivatives",
+    "tvl": 681075473.81153,
+    "change_1d": -1.2259254192697568,
+    "change_7d": -17.392207011386347
+  },
+  {
+    "name": "OSL HK",
+    "category": "CEX",
+    "tvl": 607377309.667515,
+    "change_1d": -0.6448404953647753,
+    "change_7d": 0.2620309794888698
+  },
+  {
+    "name": "BingX",
+    "category": "CEX",
+    "tvl": 582060898.87439,
+    "change_1d": -0.27184981041260414,
+    "change_7d": -0.5556646115080497
+  },
+  {
+    "name": "Aster Bridge",
+    "category": "Bridge",
+    "tvl": 507880696.32180995,
+    "change_1d": -0.19266509113727182,
+    "change_7d": -3.3871506535909646
+  },
+  {
+    "name": "SolvBTC",
+    "category": "Bridge",
+    "tvl": 478514629.70292276,
+    "change_1d": -0.2741543667264068,
+    "change_7d": 0.406099076680718
+  },
+  {
+    "name": "Unit",
+    "category": "Bridge",
+    "tvl": 437919997.1417437,
+    "change_1d": -0.33111664690611065,
+    "change_7d": -4.193234460619095
+  },
+  {
+    "name": "Indodax",
+    "category": "CEX",
+    "tvl": 402864724.8996716,
+    "change_1d": -0.2317011127991151,
+    "change_7d": 0.885076966587107
+  },
+  {
+    "name": "Renzo",
+    "category": "Liquid Restaking",
+    "tvl": 367574775.0603403,
+    "change_1d": -0.6155151165127819,
+    "change_7d": 4.574473391576589
+  },
+  {
+    "name": "Hastra",
+    "category": "RWA",
+    "tvl": 360075996.5885363,
+    "change_1d": -1.0767911212112722,
+    "change_7d": -0.7210917372351844
+  },
+  {
+    "name": "Solstice USX",
+    "category": "Basis Trading",
+    "tvl": 356664675.19199836,
+    "change_1d": -0.012088290122278522,
+    "change_7d": 1.2748841651728071
+  },
+  {
+    "name": "Phemex",
+    "category": "CEX",
+    "tvl": 339087145.4340073,
+    "change_1d": -0.051312151579907095,
+    "change_7d": 0.05361091317853095
+  },
+  {
+    "name": "xStocks",
+    "category": "RWA",
+    "tvl": 328505292.2118821,
+    "change_1d": -8.093839455822206,
+    "change_7d": -0.3179274962452183
+  },
+  {
+    "name": "Backpack",
+    "category": "CEX",
+    "tvl": 324371622.3747116,
+    "change_1d": 0.05395405507053397,
+    "change_7d": -2.126500689877645
+  },
+  {
+    "name": "BounceBit CeDeFi Yield",
+    "category": "Basis Trading",
+    "tvl": 320902158.5071472,
+    "change_1d": -0.28189318975300637,
+    "change_7d": 0.23776553481013707
+  },
+  {
+    "name": "PancakeSwap AMM V3",
+    "category": "Dexs",
+    "tvl": 310631050.0015723,
+    "change_1d": -1.1502615117566393,
+    "change_7d": -1.1970305966953418
+  },
+  {
+    "name": "Bitvavo",
+    "category": "CEX",
+    "tvl": 286193483.7777447,
+    "change_1d": 0.8310688235125099,
+    "change_7d": 2.2510293112189856
+  },
+  {
+    "name": "Meteora DLMM",
+    "category": "Dexs",
+    "tvl": 252139724.51738557,
+    "change_1d": -0.19510056656881147,
+    "change_7d": -12.867048991122033
+  }
+]

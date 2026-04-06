@@ -1,0 +1,709 @@
+{
+  "address": "H6KxmhVSn7GWEwXteNnoevcUayJUTALi2CuTmLE2RMjK",
+  "metadata": {
+    "name": "ai_trader",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "deposit",
+      "docs": [
+        "\u00d0\u0178\u00d1\u20ac\u00d0\u00b8\u00d0\u00bd\u00d0\u00b8\u00d0\u00bc\u00d0\u00b0\u00d0\u00b5\u00d1\u201a SOL \u00d0\u00be\u00d1\u201a \u00d0\u00bf\u00d0\u00be\u00d0\u00bb\u00d1\u0152\u00d0\u00b7\u00d0\u00be\u00d0\u00b2\u00d0\u00b0\u00d1\u201a\u00d0\u00b5\u00d0\u00bb\u00d1\udc8f \u00d0\u00b2 vault.",
+        "\u00d0\u0178\u00d1\u20ac\u00d0\u00b8 \u00d0\u00bf\u00d0\u00b5\u00d1\u20ac\u00d0\u00b2\u00d0\u00be\u00d0\u00bc \u00d0\u00b2\u00d1\u2039\u00d0\u00b7\u00d0\u00be\u00d0\u00b2\u00d0\u00b5 \u00d0\u00b8\u00d0\u00bd\u00d0\u00b8\u00d1\u2020\u00d0\u00b8\u00d0\u00b0\u00d0\u00bb\u00d0\u00b8\u00d0\u00b7\u00d0\u00b8\u00d1\u20ac\u00d1\u0192\u00d0\u00b5\u00d1\u201a UserState \u00d0\u00b0\u00d0\u00ba\u00d0\u00ba\u00d0\u00b0\u00d1\u0192\u00d0\u00bd\u00d1\u201a."
+      ],
+      "discriminator": [
+        242,
+        35,
+        198,
+        137,
+        82,
+        225,
+        242,
+        182
+      ],
+      "accounts": [
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "execute",
+      "docs": [
+        "\u00d0\u02dc\u00d1\udc81\u00d0\u00bf\u00d0\u00be\u00d0\u00bb\u00d0\u00bd\u00d1\udc8f\u00d0\u00b5\u00d1\u201a \u00d1\u201a\u00d0\u00be\u00d1\u20ac\u00d0\u00b3\u00d0\u00be\u00d0\u00b2\u00d0\u00be\u00d0\u00b5 \u00d1\u20ac\u00d0\u00b5\u00d1\u02c6\u00d0\u00b5\u00d0\u00bd\u00d0\u00b8\u00d0\u00b5 AI-\u00d0\u00b0\u00d0\u00b3\u00d0\u00b5\u00d0\u00bd\u00d1\u201a\u00d0\u00b0.",
+        "\u00d0\u00a2\u00d0\u00be\u00d0\u00bb\u00d1\u0152\u00d0\u00ba\u00d0\u00be agent_authority \u00d0\u00bc\u00d0\u00be\u00d0\u00b6\u00d0\u00b5\u00d1\u201a \u00d0\u00b2\u00d1\u2039\u00d0\u00b7\u00d0\u00b2\u00d0\u00b0\u00d1\u201a\u00d1\u0152 \u00d1\udc8d\u00d1\u201a\u00d1\u0192 \u00d1\u201e\u00d1\u0192\u00d0\u00bd\u00d0\u00ba\u00d1\u2020\u00d0\u00b8\u00d1\u017d.",
+        "action: 0 = BUY, 1 = SELL, 2 = HOLD"
+      ],
+      "discriminator": [
+        130,
+        221,
+        242,
+        154,
+        13,
+        193,
+        189,
+        29
+      ],
+      "accounts": [
+        {
+          "name": "user_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "agent",
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "user",
+          "type": "pubkey"
+        },
+        {
+          "name": "action",
+          "type": "u8"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "price",
+          "type": "u64"
+        },
+        {
+          "name": "reason",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "init_vault",
+      "docs": [
+        "\u00d0\u00a1\u00d0\u00be\u00d0\u00b7\u00d0\u00b4\u00d0\u00b0\u00d1\u2018\u00d1\u201a vault PDA \u00e2\u20ac\u201d \u00d0\u00b2\u00d1\u2039\u00d0\u00b7\u00d0\u00b2\u00d0\u00b0\u00d1\u201a\u00d1\u0152 \u00d0\u00be\u00d0\u00b4\u00d0\u00b8\u00d0\u00bd \u00d1\u20ac\u00d0\u00b0\u00d0\u00b7 \u00d1\udc81\u00d1\u20ac\u00d0\u00b0\u00d0\u00b7\u00d1\u0192 \u00d0\u00bf\u00d0\u00be\u00d1\udc81\u00d0\u00bb\u00d0\u00b5 initialize.",
+        "Vault \u00d1\u2026\u00d1\u20ac\u00d0\u00b0\u00d0\u00bd\u00d0\u00b8\u00d1\u201a SOL \u00d0\u00b2\u00d1\udc81\u00d0\u00b5\u00d1\u2026 \u00d0\u00bf\u00d0\u00be\u00d0\u00bb\u00d1\u0152\u00d0\u00b7\u00d0\u00be\u00d0\u00b2\u00d0\u00b0\u00d1\u201a\u00d0\u00b5\u00d0\u00bb\u00d0\u00b5\u00d0\u00b9 \u00d0\u00b8 \u00d0\u00bf\u00d1\u20ac\u00d0\u00b8\u00d0\u00bd\u00d0\u00b0\u00d0\u00b4\u00d0\u00bb\u00d0\u00b5\u00d0\u00b6\u00d0\u00b8\u00d1\u201a \u00d0\u00bf\u00d1\u20ac\u00d0\u00be\u00d0\u00b3\u00d1\u20ac\u00d0\u00b0\u00d0\u00bc\u00d0\u00bc\u00d0\u00b5."
+      ],
+      "discriminator": [
+        77,
+        79,
+        85,
+        150,
+        33,
+        217,
+        52,
+        106
+      ],
+      "accounts": [
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize",
+      "docs": [
+        "\u00d0\u2019\u00d1\u2039\u00d0\u00b7\u00d1\u2039\u00d0\u00b2\u00d0\u00b0\u00d0\u00b5\u00d1\u201a\u00d1\udc81\u00d1\udc8f \u00d0\u00be\u00d0\u00b4\u00d0\u00b8\u00d0\u00bd \u00d1\u20ac\u00d0\u00b0\u00d0\u00b7 \u00d0\u00bf\u00d1\u20ac\u00d0\u00b8 \u00d0\u00b4\u00d0\u00b5\u00d0\u00bf\u00d0\u00bb\u00d0\u00be\u00d0\u00b5.",
+        "\u00d0\u00a1\u00d0\u00be\u00d0\u00b7\u00d0\u00b4\u00d0\u00b0\u00d1\u2018\u00d1\u201a \u00d0\u00ba\u00d0\u00be\u00d0\u00bd\u00d1\u201e\u00d0\u00b8\u00d0\u00b3 \u00d0\u00bf\u00d1\u20ac\u00d0\u00be\u00d0\u00b3\u00d1\u20ac\u00d0\u00b0\u00d0\u00bc\u00d0\u00bc\u00d1\u2039 \u00d1\udc81 \u00d0\u00bf\u00d1\u0192\u00d0\u00b1\u00d0\u00bb\u00d0\u00b8\u00d1\u2021\u00d0\u00bd\u00d1\u2039\u00d0\u00bc \u00d0\u00ba\u00d0\u00bb\u00d1\u017d\u00d1\u2021\u00d0\u00be\u00d0\u00bc \u00d0\u00b0\u00d0\u00b3\u00d0\u00b5\u00d0\u00bd\u00d1\u201a\u00d0\u00b0."
+      ],
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "agent_authority",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "set_strategy",
+      "docs": [
+        "\u00d0\u00a3\u00d1\udc81\u00d1\u201a\u00d0\u00b0\u00d0\u00bd\u00d0\u00b0\u00d0\u00b2\u00d0\u00bb\u00d0\u00b8\u00d0\u00b2\u00d0\u00b0\u00d0\u00b5\u00d1\u201a \u00d1\udc81\u00d1\u201a\u00d1\u20ac\u00d0\u00b0\u00d1\u201a\u00d0\u00b5\u00d0\u00b3\u00d0\u00b8\u00d1\u017d \u00d0\u00bf\u00d0\u00be\u00d0\u00bb\u00d1\u0152\u00d0\u00b7\u00d0\u00be\u00d0\u00b2\u00d0\u00b0\u00d1\u201a\u00d0\u00b5\u00d0\u00bb\u00d1\udc8f: Conservative / Aggressive."
+      ],
+      "discriminator": [
+        251,
+        41,
+        210,
+        173,
+        140,
+        96,
+        78,
+        235
+      ],
+      "accounts": [
+        {
+          "name": "user_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "strategy",
+          "type": {
+            "defined": {
+              "name": "Strategy"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "withdraw",
+      "docs": [
+        "\u00d0\u2019\u00d0\u00be\u00d0\u00b7\u00d0\u00b2\u00d1\u20ac\u00d0\u00b0\u00d1\u2030\u00d0\u00b0\u00d0\u00b5\u00d1\u201a SOL \u00d0\u00bf\u00d0\u00be\u00d0\u00bb\u00d1\u0152\u00d0\u00b7\u00d0\u00be\u00d0\u00b2\u00d0\u00b0\u00d1\u201a\u00d0\u00b5\u00d0\u00bb\u00d1\u017d \u00d0\u00b8\u00d0\u00b7 vault."
+      ],
+      "discriminator": [
+        183,
+        18,
+        70,
+        156,
+        148,
+        109,
+        161,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  117,
+                  115,
+                  101,
+                  114,
+                  95,
+                  115,
+                  116,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "ProgramConfig",
+      "discriminator": [
+        196,
+        210,
+        90,
+        231,
+        144,
+        149,
+        140,
+        63
+      ]
+    },
+    {
+      "name": "UserState",
+      "discriminator": [
+        72,
+        177,
+        85,
+        249,
+        76,
+        167,
+        186,
+        126
+      ]
+    },
+    {
+      "name": "Vault",
+      "discriminator": [
+        211,
+        8,
+        232,
+        43,
+        2,
+        152,
+        117,
+        119
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "DepositEvent",
+      "discriminator": [
+        120,
+        248,
+        61,
+        83,
+        31,
+        142,
+        107,
+        144
+      ]
+    },
+    {
+      "name": "TradeEvent",
+      "discriminator": [
+        189,
+        219,
+        127,
+        211,
+        78,
+        230,
+        97,
+        238
+      ]
+    },
+    {
+      "name": "WithdrawEvent",
+      "discriminator": [
+        22,
+        9,
+        133,
+        26,
+        160,
+        44,
+        71,
+        192
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "UnauthorizedAgent",
+      "msg": "\u00d0\u00a2\u00d0\u00be\u00d0\u00bb\u00d1\u0152\u00d0\u00ba\u00d0\u00be \u00d0\u00b0\u00d0\u00b2\u00d1\u201a\u00d0\u00be\u00d1\u20ac\u00d0\u00b8\u00d0\u00b7\u00d0\u00be\u00d0\u00b2\u00d0\u00b0\u00d0\u00bd\u00d0\u00bd\u00d1\u2039\u00d0\u00b9 \u00d0\u00b0\u00d0\u00b3\u00d0\u00b5\u00d0\u00bd\u00d1\u201a \u00d0\u00bc\u00d0\u00be\u00d0\u00b6\u00d0\u00b5\u00d1\u201a \u00d0\u00b8\u00d1\udc81\u00d0\u00bf\u00d0\u00be\u00d0\u00bb\u00d0\u00bd\u00d1\udc8f\u00d1\u201a\u00d1\u0152 \u00d1\udc81\u00d0\u00b4\u00d0\u00b5\u00d0\u00bb\u00d0\u00ba\u00d0\u00b8"
+    },
+    {
+      "code": 6001,
+      "name": "InsufficientBalance",
+      "msg": "\u00d0\udc9d\u00d0\u00b5\u00d0\u00b4\u00d0\u00be\u00d1\udc81\u00d1\u201a\u00d0\u00b0\u00d1\u201a\u00d0\u00be\u00d1\u2021\u00d0\u00bd\u00d0\u00be \u00d1\udc81\u00d1\u20ac\u00d0\u00b5\u00d0\u00b4\u00d1\udc81\u00d1\u201a\u00d0\u00b2 \u00d0\u00bd\u00d0\u00b0 \u00d0\u00b1\u00d0\u00b0\u00d0\u00bb\u00d0\u00b0\u00d0\u00bd\u00d1\udc81\u00d0\u00b5"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidAction",
+      "msg": "\u00d0\udc9d\u00d0\u00b5\u00d0\u00b2\u00d0\u00b5\u00d1\u20ac\u00d0\u00bd\u00d0\u00be\u00d0\u00b5 \u00d0\u00b4\u00d0\u00b5\u00d0\u00b9\u00d1\udc81\u00d1\u201a\u00d0\u00b2\u00d0\u00b8\u00d0\u00b5: 0=BUY, 1=SELL, 2=HOLD"
+    },
+    {
+      "code": 6003,
+      "name": "WrongUser",
+      "msg": "UserState \u00d0\u00bf\u00d1\u20ac\u00d0\u00b8\u00d0\u00bd\u00d0\u00b0\u00d0\u00b4\u00d0\u00bb\u00d0\u00b5\u00d0\u00b6\u00d0\u00b8\u00d1\u201a \u00d0\u00b4\u00d1\u20ac\u00d1\u0192\u00d0\u00b3\u00d0\u00be\u00d0\u00bc\u00d1\u0192 \u00d0\u00bf\u00d0\u00be\u00d0\u00bb\u00d1\u0152\u00d0\u00b7\u00d0\u00be\u00d0\u00b2\u00d0\u00b0\u00d1\u201a\u00d0\u00b5\u00d0\u00bb\u00d1\u017d"
+    },
+    {
+      "code": 6004,
+      "name": "ReasonTooLong",
+      "msg": "\u00d0\u00a1\u00d1\u201a\u00d1\u20ac\u00d0\u00be\u00d0\u00ba\u00d0\u00b0 reason \u00d0\u00bf\u00d1\u20ac\u00d0\u00b5\u00d0\u00b2\u00d1\u2039\u00d1\u02c6\u00d0\u00b0\u00d0\u00b5\u00d1\u201a \u00d0\u00bc\u00d0\u00b0\u00d0\u00ba\u00d1\udc81\u00d0\u00b8\u00d0\u00bc\u00d0\u00b0\u00d0\u00bb\u00d1\u0152\u00d0\u00bd\u00d1\u0192\u00d1\u017d \u00d0\u00b4\u00d0\u00bb\u00d0\u00b8\u00d0\u00bd\u00d1\u0192 200 \u00d1\udc81\u00d0\u00b8\u00d0\u00bc\u00d0\u00b2\u00d0\u00be\u00d0\u00bb\u00d0\u00be\u00d0\u00b2"
+    }
+  ],
+  "types": [
+    {
+      "name": "Action",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Buy"
+          },
+          {
+            "name": "Sell"
+          },
+          {
+            "name": "Hold"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DepositEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "new_balance",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProgramConfig",
+      "docs": [
+        "\u00d0\u201c\u00d0\u00bb\u00d0\u00be\u00d0\u00b1\u00d0\u00b0\u00d0\u00bb\u00d1\u0152\u00d0\u00bd\u00d1\u2039\u00d0\u00b9 \u00d0\u00ba\u00d0\u00be\u00d0\u00bd\u00d1\u201e\u00d0\u00b8\u00d0\u00b3 \u00d0\u00bf\u00d1\u20ac\u00d0\u00be\u00d0\u00b3\u00d1\u20ac\u00d0\u00b0\u00d0\u00bc\u00d0\u00bc\u00d1\u2039 \u00e2\u20ac\u201d \u00d0\u00be\u00d0\u00b4\u00d0\u00b8\u00d0\u00bd \u00d0\u00b0\u00d0\u00ba\u00d0\u00ba\u00d0\u00b0\u00d1\u0192\u00d0\u00bd\u00d1\u201a \u00d0\u00bd\u00d0\u00b0 \u00d0\u00b2\u00d1\udc81\u00d1\u017d \u00d0\u00bf\u00d1\u20ac\u00d0\u00be\u00d0\u00b3\u00d1\u20ac\u00d0\u00b0\u00d0\u00bc\u00d0\u00bc\u00d1\u0192"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "agent_authority",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Strategy",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Conservative"
+          },
+          {
+            "name": "Aggressive"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TradeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "action",
+            "type": {
+              "defined": {
+                "name": "Action"
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "reason",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserState",
+      "docs": [
+        "\u00d0\u0178\u00d0\u00b5\u00d1\u20ac\u00d1\udc81\u00d0\u00be\u00d0\u00bd\u00d0\u00b0\u00d0\u00bb\u00d1\u0152\u00d0\u00bd\u00d0\u00be\u00d0\u00b5 \u00d1\udc81\u00d0\u00be\u00d1\udc81\u00d1\u201a\u00d0\u00be\u00d1\udc8f\u00d0\u00bd\u00d0\u00b8\u00d0\u00b5 \u00d0\u00ba\u00d0\u00b0\u00d0\u00b6\u00d0\u00b4\u00d0\u00be\u00d0\u00b3\u00d0\u00be \u00d0\u00bf\u00d0\u00be\u00d0\u00bb\u00d1\u0152\u00d0\u00b7\u00d0\u00be\u00d0\u00b2\u00d0\u00b0\u00d1\u201a\u00d0\u00b5\u00d0\u00bb\u00d1\udc8f"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "balance",
+            "type": "u64"
+          },
+          {
+            "name": "position",
+            "type": "u64"
+          },
+          {
+            "name": "strategy",
+            "type": {
+              "defined": {
+                "name": "Strategy"
+              }
+            }
+          },
+          {
+            "name": "last_action",
+            "type": {
+              "defined": {
+                "name": "Action"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Vault",
+      "docs": [
+        "PDA-\u00d1\u2026\u00d1\u20ac\u00d0\u00b0\u00d0\u00bd\u00d0\u00b8\u00d0\u00bb\u00d0\u00b8\u00d1\u2030\u00d0\u00b5 SOL. \u00d0\u201d\u00d0\u00b0\u00d0\u00bd\u00d0\u00bd\u00d1\u2039\u00d1\u2026 \u00d0\u00bd\u00d0\u00b5\u00d1\u201a, \u00d1\u201a\u00d0\u00be\u00d0\u00bb\u00d1\u0152\u00d0\u00ba\u00d0\u00be lamports + discriminator."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "WithdrawEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "remaining_balance",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ]
+}
