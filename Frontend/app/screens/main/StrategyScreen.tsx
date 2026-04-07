@@ -98,7 +98,6 @@ function ActionBar({
   icon,
   color,
   loading,
-  arrowShift,
   onPress,
 }: {
   title: string;
@@ -106,7 +105,6 @@ function ActionBar({
   icon: keyof typeof Ionicons.glyphMap;
   color: string;
   loading: boolean;
-  arrowShift: Animated.AnimatedInterpolation<string | number>;
   onPress: () => void;
 }) {
   const [hovered, setHovered] = useState(false);
@@ -164,9 +162,7 @@ function ActionBar({
           </View>
         </View>
 
-        <Animated.View style={{ transform: [{ translateX: arrowShift }] }}>
-          <Ionicons name="arrow-forward" size={18} color={color} />
-        </Animated.View>
+        <Ionicons name="arrow-forward" size={18} color={color} />
       </View>
     </Pressable>
   );
@@ -182,22 +178,13 @@ export function StrategyScreen() {
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const pulse = useRef(new Animated.Value(1)).current;
-  const arrowPulse = useRef(new Animated.Value(0)).current;
   const glowDrift = useRef(new Animated.Value(0)).current;
-  const [displayBalance, setDisplayBalance] = useState(wallet.balance);
 
   useEffect(() => {
     const pulseLoop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, { toValue: 1.22, duration: 800, useNativeDriver: true }),
         Animated.timing(pulse, { toValue: 1, duration: 800, useNativeDriver: true }),
-      ])
-    );
-
-    const arrowLoop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(arrowPulse, { toValue: 1, duration: 900, useNativeDriver: true }),
-        Animated.timing(arrowPulse, { toValue: 0, duration: 900, useNativeDriver: true }),
       ])
     );
 
@@ -209,55 +196,48 @@ export function StrategyScreen() {
     );
 
     pulseLoop.start();
-    arrowLoop.start();
     driftLoop.start();
 
     return () => {
       pulseLoop.stop();
-      arrowLoop.stop();
       driftLoop.stop();
     };
-  }, [arrowPulse, glowDrift, pulse]);
+  }, [glowDrift, pulse]);
 
-  useEffect(() => {
-    const next = wallet.balance;
-    if (Math.abs(next - displayBalance) < 0.001) {
-      setDisplayBalance(next);
-      return;
-    }
-
-    let current = displayBalance;
-    const steps = 20;
-    const delta = (next - current) / steps;
-    let tick = 0;
-
-    const id = setInterval(() => {
-      tick += 1;
-      current += delta;
-      if (tick >= steps) {
-        clearInterval(id);
-        setDisplayBalance(next);
-      } else {
-        setDisplayBalance(current);
+  const handleWalletAction = async () => {
+    try {
+      if (wallet.connected) {
+        await disconnectWallet();
+        showToast('Wallet disconnected', 'info');
+        return;
       }
-    }, 28);
 
-    return () => clearInterval(id);
-  }, [wallet.balance]);
+      await connectWallet();
+      showToast('Wallet connected', 'success');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Wallet action failed', 'error');
+    }
+  };
 
   const depositMutation = useMutation({
     mutationFn: () => deposit(1),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       showToast('Deposited 1 SOL into vault', 'success');
+    },
+    onError: (error) => {
+      showToast(error instanceof Error ? error.message : 'Deposit failed', 'error');
     },
   });
 
   const withdrawMutation = useMutation({
     mutationFn: () => withdraw(1),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       showToast('Withdrew 1 SOL from vault', 'info');
+    },
+    onError: (error) => {
+      showToast(error instanceof Error ? error.message : 'Withdraw failed', 'error');
     },
   });
 
@@ -272,20 +252,18 @@ export function StrategyScreen() {
     () => (decisions ?? []).filter((item) => item.action !== 'HOLD').slice(-3).reverse(),
     [decisions]
   );
+
   const latest = data?.latestDecision ?? null;
   const pnl = data?.profitLoss ?? 0;
   const aiStatus = data?.agentStatus ?? 'Idle';
+  const tradesCount = data?.tradesCount ?? 0;
 
   const heroOpacity = scrollY.interpolate({
     inputRange: [0, viewportHeight * 0.28],
     outputRange: [1, 0.9],
     extrapolate: 'clamp',
   });
-  const walletOpacity = scrollY.interpolate({
-    inputRange: [0, viewportHeight * 0.5],
-    outputRange: [1, 1],
-    extrapolate: 'clamp',
-  });
+
   const sectionOpacity = scrollY.interpolate({
     inputRange: [viewportHeight * 0.26, viewportHeight * 1.1],
     outputRange: [1, 1],
@@ -294,7 +272,6 @@ export function StrategyScreen() {
 
   const glowX = glowDrift.interpolate({ inputRange: [0, 1], outputRange: [-20, 22] });
   const glowY = glowDrift.interpolate({ inputRange: [0, 1], outputRange: [18, -14] });
-  const arrowShift = arrowPulse.interpolate({ inputRange: [0, 1], outputRange: [0, 8] });
 
   return (
     <AppScreen padded={false}>
@@ -325,18 +302,6 @@ export function StrategyScreen() {
             transform: [{ translateX: glowY }],
           }}
         />
-        <View
-          pointerEvents="none"
-          style={{
-            position: 'absolute',
-            left: 20,
-            bottom: -90,
-            width: 320,
-            height: 320,
-            borderRadius: 180,
-            backgroundColor: 'rgba(8, 145, 178, 0.18)',
-          }}
-        />
 
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
@@ -360,113 +325,111 @@ export function StrategyScreen() {
               Trading Control Panel
             </Text>
             <Text style={{ color: '#CBD5E1', fontSize: isPhone ? 15 : 17, lineHeight: isPhone ? 24 : 28, maxWidth: 700 }}>
-              Manage your AI strategy and capital
+              Configure strategy posture and monitor execution quality
             </Text>
           </Animated.View>
 
-          <Animated.View
-            style={{
-              opacity: walletOpacity,
-              marginBottom: 24,
-              borderRadius: 34,
-              padding: 20,
-              backgroundColor: 'rgba(15, 23, 42, 0.58)',
-            }}
-          >
+          <Animated.View style={{ opacity: sectionOpacity }}>
+            <Text style={{ color: '#A5B4FC', fontSize: 12, fontWeight: '700', letterSpacing: 1.8, marginBottom: 10 }}>
+              WALLET STATUS
+            </Text>
             <View
-              pointerEvents="none"
               style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
+                marginBottom: 24,
                 borderRadius: 34,
-                borderWidth: 1,
-                borderColor: 'rgba(96, 165, 250, 0.45)',
+                padding: 20,
+                backgroundColor: 'rgba(15, 23, 42, 0.58)',
               }}
-            />
-
-            <View style={{ flexDirection: Platform.OS === 'web' ? 'row' : 'column', justifyContent: 'space-between' }}>
+            >
               <View
+                pointerEvents="none"
                 style={{
-                  flex: 1,
-                  marginRight: Platform.OS === 'web' ? 16 : 0,
-                  marginBottom: Platform.OS === 'web' ? 0 : 18,
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  borderRadius: 34,
+                  borderWidth: 1,
+                  borderColor: 'rgba(96, 165, 250, 0.45)',
                 }}
-              >
-                <Text style={{ color: '#94A3B8', fontSize: 11, letterSpacing: 1.4, marginBottom: 8 }}>
-                  WALLET BALANCE
-                </Text>
-                <Text
+              />
+
+              <View style={{ flexDirection: Platform.OS === 'web' ? 'row' : 'column', justifyContent: 'space-between' }}>
+                <View
                   style={{
-                    color: '#F8FAFC',
-                    fontSize: 42,
-                    lineHeight: 44,
-                    fontWeight: '900',
-                    textShadowColor: 'rgba(103, 232, 249, 0.65)',
-                    textShadowRadius: 20,
-                    marginBottom: 10,
+                    flex: 1,
+                    marginRight: Platform.OS === 'web' ? 16 : 0,
+                    marginBottom: Platform.OS === 'web' ? 0 : 18,
                   }}
                 >
-                  {displayBalance.toFixed(4)} SOL
-                </Text>
-                <Text style={{ color: '#A5B4FC', fontFamily: Platform.OS === 'web' ? 'monospace' : undefined }}>
-                  {truncateAddress(wallet.address)}
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  minWidth: 210,
-                  alignItems: Platform.OS === 'web' ? 'flex-end' : 'flex-start',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                  <Animated.View
-                    style={{
-                      width: 10,
-                      height: 10,
-                      borderRadius: 5,
-                      marginRight: 8,
-                      backgroundColor: wallet.connected ? '#22C55E' : '#F59E0B',
-                      transform: [{ scale: pulse }],
-                    }}
-                  />
+                  <Text style={{ color: '#94A3B8', fontSize: 11, letterSpacing: 1.4, marginBottom: 8 }}>CONNECTED WALLET</Text>
                   <Text
                     style={{
-                      color: wallet.connected ? '#22C55E' : '#F59E0B',
-                      fontSize: 12,
-                      fontWeight: '800',
-                      letterSpacing: 1,
+                      color: '#F8FAFC',
+                      fontSize: 32,
+                      lineHeight: 36,
+                      fontWeight: '900',
+                      marginBottom: 10,
                     }}
                   >
-                    {wallet.connected ? 'CONNECTED' : 'DISCONNECTED'}
+                    {wallet.balance.toFixed(4)} SOL
+                  </Text>
+                  <Text style={{ color: '#A5B4FC', fontFamily: Platform.OS === 'web' ? 'monospace' : undefined }}>
+                    {truncateAddress(wallet.address)}
                   </Text>
                 </View>
 
-                <Pressable
-                  onPress={wallet.connected ? disconnectWallet : connectWallet}
-                  style={({ pressed }) => ({
-                    borderRadius: 999,
-                    borderWidth: 1,
-                    borderColor: wallet.connected ? 'rgba(252, 165, 165, 0.5)' : 'rgba(147, 197, 253, 0.6)',
-                    paddingHorizontal: 16,
-                    paddingVertical: 10,
-                    backgroundColor: wallet.connected ? 'rgba(239, 68, 68, 0.22)' : 'rgba(59, 130, 246, 0.26)',
-                    transform: [{ scale: pressed ? 0.97 : 1 }],
-                  })}
+                <View
+                  style={{
+                    minWidth: 210,
+                    alignItems: Platform.OS === 'web' ? 'flex-end' : 'flex-start',
+                    justifyContent: 'space-between',
+                  }}
                 >
-                  <Text style={{ color: wallet.connected ? '#FCA5A5' : '#93C5FD', fontWeight: '700' }}>
-                    {wallet.connected ? 'Disconnect' : 'Connect Phantom'}
-                  </Text>
-                </Pressable>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                    <Animated.View
+                      style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 5,
+                        marginRight: 8,
+                        backgroundColor: wallet.connected ? '#22C55E' : '#F59E0B',
+                        transform: [{ scale: pulse }],
+                      }}
+                    />
+                    <Text
+                      style={{
+                        color: wallet.connected ? '#22C55E' : '#F59E0B',
+                        fontSize: 12,
+                        fontWeight: '800',
+                        letterSpacing: 1,
+                      }}
+                    >
+                      {wallet.connected ? 'CONNECTED' : 'DISCONNECTED'}
+                    </Text>
+                  </View>
+
+                  <Pressable
+                    onPress={handleWalletAction}
+                    style={({ pressed }) => ({
+                      borderRadius: 999,
+                      borderWidth: 1,
+                      borderColor: wallet.connected ? 'rgba(252, 165, 165, 0.5)' : 'rgba(147, 197, 253, 0.6)',
+                      paddingHorizontal: 16,
+                      paddingVertical: 10,
+                      backgroundColor: wallet.connected ? 'rgba(239, 68, 68, 0.22)' : 'rgba(59, 130, 246, 0.26)',
+                      transform: [{ scale: pressed ? 0.97 : 1 }],
+                    })}
+                  >
+                    <Text style={{ color: wallet.connected ? '#FCA5A5' : '#93C5FD', fontWeight: '700' }}>
+                      {wallet.connected ? 'Disconnect' : 'Connect Phantom'}
+                    </Text>
+                  </Pressable>
+                </View>
               </View>
             </View>
-          </Animated.View>
 
-          <Animated.View style={{ opacity: sectionOpacity }}>
             <Text style={{ color: '#A5B4FC', fontSize: 12, fontWeight: '700', letterSpacing: 1.8, marginBottom: 10 }}>
               STRATEGY SELECTION
             </Text>
@@ -497,7 +460,6 @@ export function StrategyScreen() {
                 icon="arrow-down-circle-outline"
                 color="#22C55E"
                 loading={busy}
-                arrowShift={arrowShift}
                 onPress={() => depositMutation.mutate()}
               />
               <ActionBar
@@ -506,7 +468,6 @@ export function StrategyScreen() {
                 icon="arrow-up-circle-outline"
                 color="#F43F5E"
                 loading={busy}
-                arrowShift={arrowShift}
                 onPress={() => withdrawMutation.mutate()}
               />
             </View>
@@ -558,6 +519,10 @@ export function StrategyScreen() {
                     {pnl >= 0 ? '+' : ''}
                     {pnl.toFixed(2)}%
                   </Text>
+                </View>
+                <View>
+                  <Text style={{ color: '#94A3B8', fontSize: 12 }}>Executed trades</Text>
+                  <Text style={{ color: '#67E8F9', fontSize: isPhone ? 24 : 28, fontWeight: '900' }}>{tradesCount}</Text>
                 </View>
                 <View style={{ minWidth: 210 }}>
                   <Text style={{ color: '#94A3B8', fontSize: 12, marginBottom: 6 }}>Last trades</Text>

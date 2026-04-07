@@ -20,8 +20,6 @@ const ACTION_META: Record<DecisionAction, { color: string; icon: keyof typeof Io
 
 const actionColor = (action: DecisionAction) => ACTION_META[action].color;
 
-const shortTx = (txId: string) => `${txId.slice(0, 6)}...${txId.slice(-6)}`;
-
 function FilterPill({
   label,
   active,
@@ -367,7 +365,6 @@ export function AILogScreen() {
                         </View>
                         <Text style={{ color: '#94A3B8', fontSize: 12, marginBottom: 2 }}>{item.confidence}% confidence</Text>
                         <Text style={{ color: '#7DD3FC', fontSize: 12, fontWeight: '700' }}>SOL ${item.price.toFixed(2)}</Text>
-                        <Text style={{ color: '#64748B', fontFamily: Platform.OS === 'web' ? 'monospace' : undefined, fontSize: 12 }}>{shortTx(item.txId)}</Text>
                       </View>
                     </View>
                   );

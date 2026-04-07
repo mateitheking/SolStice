@@ -16,7 +16,7 @@ const formatAddress = (address: string | null) => {
 };
 
 export function ProfileScreen() {
-  const { user, wallet, logout, disconnectWallet } = useAppContext();
+  const { user, wallet, logout, connectWallet, disconnectWallet } = useAppContext();
   const { data: dashboard } = useDashboard();
   const { data: decisions } = useDecisions();
   const { showToast } = useToast();
@@ -41,9 +41,19 @@ export function ProfileScreen() {
     showToast('Logged out', 'info');
   };
 
-  const handleDisconnect = async () => {
-    await disconnectWallet();
-    showToast('Wallet disconnected', 'info');
+  const handleWalletAction = async () => {
+    try {
+      if (wallet.connected) {
+        await disconnectWallet();
+        showToast('Wallet disconnected', 'info');
+        return;
+      }
+
+      await connectWallet();
+      showToast('Wallet connected', 'success');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Wallet action failed', 'error');
+    }
   };
 
   return (
@@ -61,7 +71,7 @@ export function ProfileScreen() {
             }}
           >
             <MotionView delay={40}>
-              <ScreenHeader eyebrow="profile" title="Account Profile" subtitle="Identity, wallet details, and performance metrics." />
+              <ScreenHeader eyebrow="profile" title="Account Profile" subtitle="Identity, account status, and performance metrics." />
             </MotionView>
 
             <MotionView delay={90}>
@@ -101,7 +111,7 @@ export function ProfileScreen() {
                       </View>
                       <View style={{ alignItems: 'flex-end' }}>
                         <Text style={{ color: '#94A3B8', fontSize: 12 }}>Balance</Text>
-                        <Text style={{ color: '#F8FAFC', fontWeight: '900', fontSize: 24 }}>{wallet.balance.toFixed(4)} SOL</Text>
+                        <Text style={{ color: '#F8FAFC', fontWeight: '900', fontSize: 18 }}>{wallet.balance.toFixed(4)} SOL</Text>
                       </View>
                     </View>
                   </GlassCard>
@@ -144,9 +154,13 @@ export function ProfileScreen() {
                 }}
               >
                 <View style={{ flex: 1 }}>
-                  <AppButton label="Disconnect Wallet" onPress={handleDisconnect} variant="secondary" />
+                  <AppButton
+                    label={wallet.connected ? 'Disconnect Wallet' : 'Connect Phantom'}
+                    onPress={handleWalletAction}
+                    variant="secondary"
+                  />
                 </View>
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, maxWidth: isDesktop ? 280 : undefined }}>
                   <AppButton label="Logout" onPress={handleLogout} variant="danger" />
                 </View>
               </View>

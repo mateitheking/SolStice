@@ -13,7 +13,7 @@ const PORT = parseInt(process.env.PORT || "3001");
 const KEYPAIR_PATH = process.env.AGENT_KEYPAIR_PATH || path.join(__dirname, "agent-keypair.json");
 const IDL_PATH = process.env.IDL_PATH || path.join(__dirname, "solstice.json");
 
-const PROGRAM_ID_STR = process.env.PROGRAM_ID || "H6KxmhVSn7GWEwXteNnoevcUayJUTALi2CuTmLE2RMjK";
+const PROGRAM_ID_STR = process.env.PROGRAM_ID || "yRxrK31ibWBXorgH1g1VVXmDzZotzVhv3AudE48W44f";
 const PROGRAM_ID = new PublicKey(PROGRAM_ID_STR);
 
 // PDA seeds — must match lib.rs exactly

@@ -17,64 +17,78 @@ export function WalletScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleConnect = async () => {
-    setLoading(true);
-    await connectWallet();
-    showToast('Wallet connected', 'success');
-    setLoading(false);
+    try {
+      setLoading(true);
+      await connectWallet();
+      showToast('Wallet connected', 'success');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Wallet connection failed', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDisconnect = async () => {
-    setLoading(true);
-    await disconnectWallet();
-    showToast('Wallet disconnected', 'info');
-    setLoading(false);
+    try {
+      setLoading(true);
+      await disconnectWallet();
+      showToast('Wallet disconnected', 'info');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleRefresh = async () => {
-    setLoading(true);
-    await refreshWallet();
-    showToast('Balance updated', 'success');
-    setLoading(false);
+    try {
+      setLoading(true);
+      await refreshWallet();
+      showToast('Balance updated', 'success');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Balance refresh failed', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <AppScreen>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
         <MotionView delay={40}>
-          <ScreenHeader
-            eyebrow="wallet"
-            title="Phantom Wallet"
-            subtitle="Devnet connection with live balance refresh."
-          />
+          <ScreenHeader eyebrow="wallet" title="Phantom Wallet" subtitle="Devnet connection with live balance refresh." />
         </MotionView>
 
-        {/* Status card */}
         <MotionView delay={110}>
           <GlassCard accent={wallet.connected ? 'emerald' : 'none'}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View>
-                <Text style={{ fontSize: 12, color: '#9CA3AF', fontWeight: '500', marginBottom: 4 }}>
-                  Connection
-                </Text>
+                <Text style={{ fontSize: 12, color: '#9CA3AF', fontWeight: '500', marginBottom: 4 }}>Connection</Text>
                 <Text style={{ fontSize: 18, fontWeight: '700', color: wallet.connected ? '#10B981' : '#6B7280' }}>
                   {wallet.connected ? 'Connected' : 'Not Connected'}
                 </Text>
               </View>
-              <View style={{
-                width: 44, height: 44, borderRadius: 22,
-                backgroundColor: wallet.connected ? '#ECFDF5' : '#F3F4F6',
-                alignItems: 'center', justifyContent: 'center',
-              }}>
-                <View style={{
-                  width: 16, height: 16, borderRadius: 8,
-                  backgroundColor: wallet.connected ? '#10B981' : '#D1D5DB',
-                }} />
+              <View
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 22,
+                  backgroundColor: wallet.connected ? '#ECFDF5' : '#F3F4F6',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <View
+                  style={{
+                    width: 16,
+                    height: 16,
+                    borderRadius: 8,
+                    backgroundColor: wallet.connected ? '#10B981' : '#D1D5DB',
+                  }}
+                />
               </View>
             </View>
           </GlassCard>
         </MotionView>
 
-        {/* Network */}
         <MotionView delay={155}>
           <GlassCard>
             <Text style={{ fontSize: 12, color: '#9CA3AF', fontWeight: '500', marginBottom: 4 }}>Network</Text>
@@ -82,22 +96,23 @@ export function WalletScreen() {
               <View style={{ backgroundColor: '#EFF6FF', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 4 }}>
                 <Text style={{ fontSize: 12, fontWeight: '700', color: '#3B82F6' }}>{wallet.network}</Text>
               </View>
-              <Text style={{ fontSize: 12, color: '#9CA3AF' }}>Solana testnet</Text>
+              <Text style={{ fontSize: 12, color: '#9CA3AF' }}>Solana devnet</Text>
             </View>
           </GlassCard>
         </MotionView>
 
-        {/* Address + Balance */}
         <MotionView delay={200}>
           <GlassCard>
             <Text style={{ fontSize: 12, color: '#9CA3AF', fontWeight: '500', marginBottom: 6 }}>Wallet Address</Text>
-            <Text style={{
-              fontSize: 13,
-              color: wallet.connected ? '#111111' : '#9CA3AF',
-              fontFamily: 'monospace',
-              letterSpacing: 0.5,
-              marginBottom: 16,
-            }}>
+            <Text
+              style={{
+                fontSize: 13,
+                color: wallet.connected ? '#111111' : '#9CA3AF',
+                fontFamily: 'monospace',
+                letterSpacing: 0.5,
+                marginBottom: 16,
+              }}
+            >
               {wallet.address ? truncateAddress(wallet.address) : '— not connected —'}
             </Text>
             <View style={{ height: 1, backgroundColor: '#F3F4F6', marginBottom: 16 }} />
@@ -111,7 +126,6 @@ export function WalletScreen() {
           </GlassCard>
         </MotionView>
 
-        {/* Actions */}
         <MotionView delay={250}>
           <View style={{ gap: 10, marginTop: 4 }}>
             {wallet.connected ? (

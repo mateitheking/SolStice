@@ -101,6 +101,30 @@ function StatPill({ label, value, accent }: { label: string; value: string; acce
   );
 }
 
+function PriceTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) {
+  if (!active || !payload?.length) {
+    return null;
+  }
+
+  const value = Number(payload[0]?.value ?? 0);
+
+  return (
+    <View
+      style={{
+        backgroundColor: 'rgba(2, 6, 23, 0.9)',
+        borderWidth: 1,
+        borderColor: 'rgba(100, 116, 139, 0.45)',
+        borderRadius: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+      }}
+    >
+      <Text style={{ color: '#E2E8F0', fontWeight: '700', marginBottom: 8 }}>{`Time: ${label}`}</Text>
+      <Text style={{ color: '#67E8F9', fontSize: 16, fontWeight: '800' }}>{`Price: $${value.toFixed(2)}`}</Text>
+    </View>
+  );
+}
+
 export function DashboardScreen() {
   const navigation = useNavigation<any>();
   const queryClient = useQueryClient();
@@ -132,7 +156,6 @@ export function DashboardScreen() {
         explanation: 'AI detected momentum breakout with strong volume continuation and low downside volatility.',
         confidence: 86,
         price: solPrice,
-        txId: 'sim-1',
       },
       {
         id: 'fallback-2',
@@ -141,7 +164,6 @@ export function DashboardScreen() {
         explanation: 'Trend remains constructive, but the model reduced aggression while waiting for confirmation.',
         confidence: 72,
         price: solPrice - 1.1,
-        txId: 'sim-2',
       },
       {
         id: 'fallback-3',
@@ -150,7 +172,6 @@ export function DashboardScreen() {
         explanation: 'Short-term mean reversion signal triggered partial exit to protect unrealized gains.',
         confidence: 79,
         price: solPrice - 2.5,
-        txId: 'sim-3',
       },
     ];
   }, [decisions, solPrice]);
@@ -215,9 +236,13 @@ export function DashboardScreen() {
       return;
     }
 
-    await connectWallet();
-    await queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-    showToast('Wallet connected', 'success');
+    try {
+      await connectWallet();
+      await queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      showToast('Wallet connected', 'success');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Wallet connection failed', 'error');
+    }
   };
 
   const heroOpacity = scrollY.interpolate({
@@ -364,11 +389,17 @@ export function DashboardScreen() {
                 </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-                  <HeroCTA label="Connect Wallet" onPress={onConnectWallet} primary />
-                  <HeroCTA label="Explore Strategy" onPress={() => navigation.navigate('TRADE')} />
+                  <HeroCTA label="Explore Strategy" onPress={() => navigation.navigate('TRADE')} primary />
+                  <HeroCTA label="View Analytics" onPress={() => navigation.navigate('AI ANALYTICS')} />
+                  <HeroCTA
+                    label={wallet.connected ? 'Wallet Connected' : 'Connect Phantom'}
+                    onPress={onConnectWallet}
+                  />
                 </View>
-                <Text style={{ color: wallet.connected ? '#22C55E' : '#64748B', marginTop: 18, fontWeight: '700' }}>
-                  {wallet.connected ? 'Wallet connected and ready' : 'Wallet offline, autonomous execution paused'}
+                <Text style={{ color: '#64748B', marginTop: 18, fontWeight: '700' }}>
+                  {wallet.connected
+                    ? 'Wallet linked and ready for live balance-aware strategy monitoring.'
+                    : 'Autonomous model overview with live market context and strategy monitoring.'}
                 </Text>
               </View>
 
@@ -447,16 +478,7 @@ export function DashboardScreen() {
                     <CartesianGrid stroke="rgba(148, 163, 184, 0.08)" vertical={false} />
                     <XAxis dataKey="time" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} width={46} domain={['dataMin - 1', 'dataMax + 1']} />
-                    <Tooltip
-                      contentStyle={{
-                        background: 'rgba(2, 6, 23, 0.9)',
-                        border: '1px solid rgba(100, 116, 139, 0.45)',
-                        borderRadius: 12,
-                        color: '#E2E8F0',
-                      }}
-                      formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Price']}
-                      labelFormatter={(label) => `Time: ${label}`}
-                    />
+                    <Tooltip content={<PriceTooltip />} />
                     <Area type="monotone" dataKey="price" stroke="none" fill="url(#priceFill)" />
                     <Line
                       type="monotone"

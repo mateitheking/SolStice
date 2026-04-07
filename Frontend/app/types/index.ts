@@ -27,7 +27,6 @@ export type Decision = {
   explanation: string;
   price: number;
   confidence: number;
-  txId: string;
 };
 
 export type Settings = {

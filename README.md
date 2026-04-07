@@ -65,7 +65,7 @@ Every trade decision includes a **reasoning hash** - a SHA-256 fingerprint of th
 
 ## Smart Contract
 
-- **Program ID:** `H6KxmhVSn7GWEwXteNnoevcUayJUTALi2CuTmLE2RMjK`
+- **Program ID:** `yRxrK31ibWBXorgH1g1VVXmDzZotzVhv3AudE48W44f`
 - **Network:** Solana Devnet
 - **Framework:** Anchor 0.30
 

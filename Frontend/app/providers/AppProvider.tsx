@@ -1,8 +1,8 @@
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { defaultSettings, defaultWallet } from '../constants/defaults';
 import { authService } from '../services/authService';
-import { decisionService } from '../services/decisionService';
 import { storageService } from '../services/storageService';
+import { vaultService } from '../services/vaultService';
 import { walletService } from '../services/walletService';
 import { Settings, StrategyType, User, WalletState } from '../types';
 
@@ -22,8 +22,8 @@ type AppContextValue = {
   disconnectWallet: () => Promise<void>;
   setStrategy: (value: StrategyType) => void;
   updateSettings: (value: Partial<Settings>) => Promise<void>;
-  deposit: (amount: number) => Promise<number>;
-  withdraw: (amount: number) => Promise<number>;
+  deposit: (amountSol: number) => Promise<string>;
+  withdraw: (amountSol: number) => Promise<string>;
 };
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -143,22 +143,28 @@ export function AppProvider({ children }: PropsWithChildren) {
     await storageService.setWallet(nextWallet);
   }, []);
 
+  const deposit = useCallback(async (amountSol: number) => {
+    const signature = await vaultService.deposit(amountSol);
+    const refreshed = await walletService.refreshBalance(wallet);
+    setWallet(refreshed);
+    await storageService.setWallet(refreshed);
+    return signature;
+  }, [wallet]);
+
+  const withdraw = useCallback(async (amountSol: number) => {
+    const signature = await vaultService.withdraw(amountSol);
+    const refreshed = await walletService.refreshBalance(wallet);
+    setWallet(refreshed);
+    await storageService.setWallet(refreshed);
+    return signature;
+  }, [wallet]);
+
   const updateSettings = useCallback(async (value: Partial<Settings>) => {
     setSettings((prev) => {
       const next = { ...prev, ...value };
       void storageService.setSettings(next);
       return next;
     });
-  }, []);
-
-  const deposit = useCallback(async (amount: number) => {
-    const response = await decisionService.deposit(amount);
-    return response.vaultBalance;
-  }, []);
-
-  const withdraw = useCallback(async (amount: number) => {
-    const response = await decisionService.withdraw(amount);
-    return response.vaultBalance;
   }, []);
 
   const value = useMemo(

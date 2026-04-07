@@ -23,12 +23,6 @@ const fetchSolPrice = async (): Promise<number> => {
   }
 };
 
-// --- Mock transaction id ---
-const randomTxId = () => {
-  const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-  return Array.from({ length: 88 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-};
-
 // --- AI decision generator ---
 const REASONS: Record<DecisionAction, string[]> = {
   BUY: [
@@ -96,7 +90,6 @@ const generateDecision = (price: number, prevPrice: number | null): Decision => 
     explanation,
     price,
     confidence,
-    txId: randomTxId(),
   };
 };
 
@@ -109,7 +102,6 @@ let liveDecisions: Decision[] = [
     explanation: 'Momentum breakout confirmed above key resistance. Position opened with conservative risk.',
     price: 152.4,
     confidence: 81,
-    txId: randomTxId(),
   },
   {
     id: '2',
@@ -118,7 +110,6 @@ let liveDecisions: Decision[] = [
     explanation: 'Market entered range-bound phase. AI paused until volatility normalizes.',
     price: 153.1,
     confidence: 58,
-    txId: randomTxId(),
   },
   {
     id: '3',
@@ -127,7 +118,6 @@ let liveDecisions: Decision[] = [
     explanation: 'Overbought RSI (>78) with declining volume. Locking in gains.',
     price: 156.8,
     confidence: 74,
-    txId: randomTxId(),
   },
   {
     id: '4',
@@ -136,7 +126,6 @@ let liveDecisions: Decision[] = [
     explanation: 'Support level held after retest. Whale accumulation pattern detected on-chain.',
     price: 154.3,
     confidence: 77,
-    txId: randomTxId(),
   },
   {
     id: '5',
@@ -145,7 +134,6 @@ let liveDecisions: Decision[] = [
     explanation: 'Mixed signals across timeframes. Waiting for directional confirmation.',
     price: 155.9,
     confidence: 52,
-    txId: randomTxId(),
   },
   {
     id: '6',
@@ -154,7 +142,6 @@ let liveDecisions: Decision[] = [
     explanation: 'MACD crossover on 1H with rising volume. Favorable risk/reward for entry.',
     price: 157.2,
     confidence: 83,
-    txId: randomTxId(),
   },
   {
     id: '7',
@@ -163,13 +150,21 @@ let liveDecisions: Decision[] = [
     explanation: 'Smart money selling detected on-chain. Position closed to manage risk.',
     price: 159.6,
     confidence: 69,
-    txId: randomTxId(),
   },
 ];
 
 let priceHistory: number[] = [152.4, 153.1, 156.8, 154.3, 155.9, 157.2, 159.6];
 let lastPrice: number | null = 159.6;
 let vaultBalance = 12.45;
+
+const normalizeMarketState = (currentPrice: number, previousPrice: number) => {
+  const ratio = currentPrice / previousPrice;
+  priceHistory = priceHistory.map((price) => Number((price * ratio).toFixed(2)));
+  liveDecisions = liveDecisions.map((decision) => ({
+    ...decision,
+    price: Number((decision.price * ratio).toFixed(2)),
+  }));
+};
 
 export const decisionService = {
   async fetchDecisions(): Promise<Decision[]> {
@@ -179,8 +174,13 @@ export const decisionService = {
 
   async fetchDashboardSnapshot(): Promise<DashboardSnapshot> {
     const solPrice = await fetchSolPrice();
+    const prevPrice = lastPrice;
 
-    const newDecision = generateDecision(solPrice, lastPrice);
+    if (prevPrice && Math.abs(solPrice - prevPrice) / prevPrice > 0.15) {
+      normalizeMarketState(solPrice, prevPrice);
+    }
+
+    const newDecision = generateDecision(solPrice, prevPrice && Math.abs(solPrice - prevPrice) / prevPrice > 0.15 ? solPrice : prevPrice);
     liveDecisions = [...liveDecisions, newDecision];
 
     priceHistory = [...priceHistory.slice(-11), solPrice];
@@ -204,17 +204,5 @@ export const decisionService = {
       history: priceHistory,
       latestDecision: newDecision,
     };
-  },
-
-  async deposit(amount: number) {
-    await wait(800);
-    vaultBalance += amount;
-    return { success: true, vaultBalance };
-  },
-
-  async withdraw(amount: number) {
-    await wait(800);
-    vaultBalance = Math.max(0, vaultBalance - amount);
-    return { success: true, vaultBalance };
   },
 };
