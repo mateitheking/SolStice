@@ -1,0 +1,10 @@
+/Users/nurali/SolStice/Smart-Contract/programs/solstice/target/sbpf-solana-solana/release/deps/solana_instruction-82bf4f8cd5ce7d12.d: /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/lib.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/account_meta.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/error.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/syscalls.rs
+
+/Users/nurali/SolStice/Smart-Contract/programs/solstice/target/sbpf-solana-solana/release/deps/libsolana_instruction-82bf4f8cd5ce7d12.rlib: /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/lib.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/account_meta.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/error.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/syscalls.rs
+
+/Users/nurali/SolStice/Smart-Contract/programs/solstice/target/sbpf-solana-solana/release/deps/libsolana_instruction-82bf4f8cd5ce7d12.rmeta: /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/lib.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/account_meta.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/error.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/syscalls.rs
+
+/Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/lib.rs:
+/Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/account_meta.rs:
+/Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/error.rs:
+/Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-instruction-2.3.3/src/syscalls.rs:

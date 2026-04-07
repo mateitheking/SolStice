@@ -1,0 +1,14 @@
+/Users/nurali/SolStice/Smart-Contract/target/sbpf-solana-solana/release/deps/serde-a19d266f9c50f6b4.d: /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/nurali/SolStice/Smart-Contract/target/sbpf-solana-solana/release/build/serde-164202c8fe4d721b/out/private.rs
+
+/Users/nurali/SolStice/Smart-Contract/target/sbpf-solana-solana/release/deps/libserde-a19d266f9c50f6b4.rlib: /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/nurali/SolStice/Smart-Contract/target/sbpf-solana-solana/release/build/serde-164202c8fe4d721b/out/private.rs
+
+/Users/nurali/SolStice/Smart-Contract/target/sbpf-solana-solana/release/deps/libserde-a19d266f9c50f6b4.rmeta: /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/nurali/SolStice/Smart-Contract/target/sbpf-solana-solana/release/build/serde-164202c8fe4d721b/out/private.rs
+
+/Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/Users/nurali/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/Users/nurali/SolStice/Smart-Contract/target/sbpf-solana-solana/release/build/serde-164202c8fe4d721b/out/private.rs:
+
+# env-dep:OUT_DIR=/Users/nurali/SolStice/Smart-Contract/target/sbpf-solana-solana/release/build/serde-164202c8fe4d721b/out
